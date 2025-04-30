@@ -17,7 +17,7 @@ export default function Pagination({ links }) {
                     {links.map((link, key) => (
                         link.url === null ?
                             (<div
-                                className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded"
+                                className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded" 
                                 >{link.label}</div>) :
                             (<Link
                                 className={getClassName(link.active)}

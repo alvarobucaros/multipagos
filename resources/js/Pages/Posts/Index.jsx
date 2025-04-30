@@ -7,8 +7,10 @@ import Swal from 'sweetalert2';
 import Pagination from '@/Components//Pagination';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
+import MiSelectDinamico from '@/Components/MiSelectDinamico';
+import MiTextArea from '@/Components/MiTextArea';
 
-export default function Subgrupo(props) {
+export default function Post(props) {
     const user = usePage().props.auth.user;
     const [modal,setModal] = useState(false);
     const [title,setTitle] = useState('');
@@ -17,11 +19,11 @@ export default function Subgrupo(props) {
     const { data,setData,delete:destroy,post,put,
     processing,reset,errors} = useForm({
         id:'',    
-        sgr_empresa_id:user.empresa_id,   
-        sgr_grupo_id:'',
-        sgr_titulo: '',
-        sgr_detalle: '',
-        sgr_estado: 'A',
+        pos_grupo_id:'',   
+        pos_titulo:'',
+        pos_descripcion: '',
+        pos_imagen: '',
+        pos_estado: 'A',
     });
 
     const [grupos, setGrupos] = useState(props.grupos);
@@ -32,11 +34,11 @@ export default function Subgrupo(props) {
         setModal(true);
         setOperation(op);
         if(op === 1){
-            setTitle('Añadir subgrupo');
-            setData({sgr_empresa_id:user.empresa_id,sgr_grupo_id:'', sgr_titulo:'', sgr_detalle:'', sgr_estado:'A'});   
+            setTitle('Añadir post');
+            setData({pos_grupo_id: '', pos_titulo: '', pos_descripcion: '', pos_imagen: '', pos_estado:'A'});   
         }
         else{
-            setTitle('Modificar subgrupo');
+            setTitle('Modificar post');
         }
     }
 
@@ -54,41 +56,41 @@ export default function Subgrupo(props) {
         e.preventDefault();
         if(operation === 1){  
             try {
-                const response = Inertia.post(`/subgrupo`, data);
+                const response = Inertia.post(`/post`, data);
                 alert('Datos actualizados exitosamente');
                 console.log('Respuesta:', response);
             } catch (error) {
-                console.error('Error al crear el subgrupo:', error);
+                console.error('Error al crear el post:', error);
             }
         }
         else{      
             try {
-                const response = Inertia.put(`/subgrupo/${data.id}`, data);
+                const response = Inertia.put(`/post/${data.id}`, data);
                 alert('Datos actualizados exitosamente');
                 console.log('Respuesta:', response);
             } catch (error) {
-                console.error('Error al actualizar el subgrupo:', error);
+                console.error('Error al actualizar el post:', error);
             }
             setModal(false);
         }
     }
 
-    const eliminar = (id, sgr_titulo) =>{
+    const eliminar = (id, pos_titulo) =>{
         const alerta = Swal.mixin({ buttonsStyling:true});
             alerta.fire({
-            title:'Seguro de eliminar el subgrupo '+id + ' '+sgr_titulo,
-            text:'Se perderá el subgrupo',
+            title:'Seguro de eliminar el post '+id + ' '+pos_titulo,
+            text:'Se perderá el post',
             icon:'question', showCancelButton:true,
             confirmButtonText: '<i class="fa-solid fa-check"></i> Si, eliminar',
             cancelButtonText:'<i class="fa-solid fa-ban"></i>No, Cancelar'
         }).then((result) => {
             if(result.isConfirmed){
-                Inertia.delete(`/subgrupo/${id}`, {
+                Inertia.delete(`/post/${id}`, {
                     onSuccess: () => {
-                        alert('subgrupo eliminado exitosamente.');
+                        alert('post eliminado exitosamente.');
                     },
                     onError: (errors) => {
-                        console.error('Error al eliminar el subgrupo:', errors);
+                        console.error('Error al eliminar el post:', errors);
                     },
                 });
             }
@@ -116,16 +118,12 @@ export default function Subgrupo(props) {
                     <button
                         className="bg-blue-500 text-white px-4 py-1 rounded mb-4"
                         onClick={() => openModal(1)}
-                        > Crear SubGrupo 
+                        > Crear Post 
                     </button>
                 </>
             )}
-            <Link
-                href="/dashboard"
-                className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
-                > Al Menú
-            </Link>
-            <span className='bg-blue-100'> SUBGRUPOS DE PRODUCTOS</span> 
+ 
+            <span className='bg-blue-100'> POSTS </span> 
             <div className="bg-white grid v-screen place-items-center py-1">
                 <table className="w-full border-collapse border border-gray-300">
                     <thead>
@@ -140,19 +138,19 @@ export default function Subgrupo(props) {
                     </thead>
                  
                     <tbody>
-                        {props.subgrupos.data.map((subgrupo) => (
-                            <tr key={subgrupo.subgrupo_id}>
-                                <td className='border border-gray-400 px-2 py-1'>{subgrupo.subgrupo_id}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{subgrupo.grp_titulo}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{subgrupo.sgr_titulo}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{subgrupo.sgr_detalle}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{subgrupo.sgr_estado}</td>
+                        {props.posts.data.map((post) => (
+                            <tr key={post.id}>
+                                <td className='border border-gray-400 px-2 py-1'>{post.id}</td>
+                                <td className='border border-gray-400 px-2 py-1'>{post.grp_titulo}</td>
+                                <td className='border border-gray-400 px-2 py-1'>{post.pos_titulo}</td>
+                                <td className='border border-gray-400 px-2 py-1'>{post.pos_descripcion}</td>
+                                <td className='border border-gray-400 px-2 py-1'>{post.pos_estado}</td>
       
                                 <td className='border border-gray-400 px-2 py-1'>
                                     <button
                                     className="bg-yellow-500 text-white px-2 py-1 rounded"
                                     onClick={() => {
-                                        setData(subgrupo); // Precarga los datos en el formulario
+                                        setData(post); // Precarga los datos en el formulario
                                         openModal(0);                                          
                                     }}
                                 >
@@ -161,7 +159,7 @@ export default function Subgrupo(props) {
                                 </td>
                                 <td className='border border-gray-400 px-2 py-1'>
                                     <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded'
-                                    onClick={() => eliminar(subgrupo.id,subgrupo.grp_titulo+' '+subgrupo.sgr_titulo)}>
+                                    onClick={() => eliminar(post.id,post.grp_titulo+' - '+post.pos_titulo)}>
                                     Eliminar
                                     </button>
                                 </td>
@@ -169,7 +167,7 @@ export default function Subgrupo(props) {
                         ))}
                     </tbody>
                 </table>
-                 <Pagination class="mt-6" links={props.subgrupos.links} />
+                 <Pagination class="mt-6" links={props.posts.links} />
             </div>    
                 <Modal show={modal} onClose={closeModal}>
                 <h2 className="p-3 text-lg font-medium text-gray-900">
@@ -179,49 +177,31 @@ export default function Subgrupo(props) {
                     <form onSubmit={save}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                            {/* <MiLista Id="sgr_grupo_id"  Label="Grupo"  data ={data.sgr_grupo_id} 
-                                options = {grupos} OnChange={handleChange} required={true}></MiLista>                                    */}
+                            <MiSelectDinamico 
+                                Id="pos_grupo_id"  Label="Grupo"  data ={data.pos_grupo_id} 
+                                listas = {grupos} OnChange={handleChange} required={true}>
+                            </MiSelectDinamico>
 
-                            <div>  
-                                <label htmlFor="sgr_grupo_id" className="block text-sm font-medium text-gray-700">Grupos </label>
-
-                                <select
-                                    id="sgr_grupo_id" name="sgr_grupo_id"
-                                    value={data.sgr_grupo_id}
-                                    onChange={handleChange} 
-                                    required={true}
-                                    className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100 'border-gray-300'}`}
-                                >
-                                {grupos.map((grupo) => (
-                                        <option key={grupo.id} value={grupo.id}>
-                                            {grupo.grp_titulo}
-                                        </option>
-                                    ))}
-
-                                </select>
-                            </div>
-    
-
-                            <MiInput  Id="sgr_titulo" Type="text" Label="Titulo SubGrupo" onChange={handleChange}
-                            classNameI="md:col-span-2" maxLength ="50" data ={data.sgr_titulo} required={true}  
+                            <MiInput  Id="pos_titulo" Type="text" Label="Titulo Post" onChange={handleChange}
+                            classNameI="md:col-span-2" maxLength ="50" data ={data.pos_titulo} required={true}  
                             OnChange = {handleChange} ></MiInput>
 
-                            <MiInput  Id="sgr_detalle" Type="text" Label="Detalles" onChange={handleChange}
-                            classNameI="md:col-span-2" maxLength ="150" data ={data.sgr_detalle} required={true}
-                            OnChange = {handleChange} ></MiInput>
+                            <MiTextArea Id="pos_descripcion" Rows="2" Cols="120" Label="Detalles" 
+                            classNameI="md:col-span-2" data ={data.pos_descripcion} required={true} 
+                            OnChange={handleChange}></MiTextArea>
                             
-                            <MiLista Id="sgr_estado"  Label="Estado"  data ={data.sgr_estado} 
+                            <MiLista Id="pos_estado"  Label="Estado"  classNameI="md:col-span-2"  data ={data.pos_estado} 
                             options = {estadoOptions} OnChange={handleChange} required={true}></MiLista>
             
                             <div className="flex justify-end">
                                 <button type="button"
-                                    className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded'
+                                    className='mx-4 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded'
                                     onClick={() => setModal(false)}
                                 >
                                     Cancelar
                                 </button>
                                 <button processing={processing} 
-                                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold mx-3 py-1 px-1 rounded'>
+                                    className='mx-4 bg-blue-500 hover:bg-blue-700 text-white font-bold mx-3 py-1 px-1 rounded'>
                                     Guardar
                                 </button>
                             </div>

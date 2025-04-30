@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -20,12 +20,12 @@ class UserController extends Controller
     {
         // Obtener usuarios paginados   
 
-        $users = User::orderBy("grp_titulo")
-        ->orderBy('name', 'asc') // Opcional: ordenar
+        $users = User::orderBy("name")
         ->paginate(10);
         return Inertia::render('Users/Index',['users'=>$users]); 
     }
 
+   // id, empresa_id, name, email, email_verified_at, password, role
 
     /**
      * Store a newly created resource in storage.

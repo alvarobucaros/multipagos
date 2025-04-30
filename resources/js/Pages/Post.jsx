@@ -5,7 +5,7 @@ import { Head, Link } from '@inertiajs/react';
 const Ejemplo = () => {
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold">En Construcción</h1>
+            <h1 className="text-2xl font-bold">Post En Construcción</h1>
             <form>
             <div className="flex justify-center items-center">
     <img className='py-8' src="../images/Trabajando.jpg" alt="Espera trabajar"  />

@@ -10,7 +10,7 @@ https://www.twilio.com/en-us/blog/laravel-breeze-vs-laravel-jetstream
 
 git add .
 git commit -m "Actualización de código"
-git push origin main
+git push origin master
 
 Si estás trabajando con más personas, no olvides realizar git pull origin main antes de hacer cambios para evitar conflictos.
 

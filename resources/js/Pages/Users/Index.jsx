@@ -126,12 +126,8 @@ export default function User(props) {
                     </button>
                 </>
             )}
-            <Link
-                href="/dashboard"
-                className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
-                > Al Menú
-            </Link>    
-            <span className='bg-blue-100'> USUARIOS DE LA APLICACION</span>    
+      
+            <span className='bg-blue-100'> ADMINISTRADORES DEL BLOG </span>    
             <div className="bg-white grid v-screen place-items-center py-1">
                 <table className="w-full border-collapse border border-gray-300">
                     <thead>

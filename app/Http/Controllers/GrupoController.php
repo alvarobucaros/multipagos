@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Grupos;
+use App\Http\Controllers\Controller;
+
+use App\Models\Grupo;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response; // Para respuestas HTTP 
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class GrupoController extends Controller
@@ -11,56 +15,50 @@ class GrupoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Grupos'); // Esto carga el componente 'Ejemplo.jsx'
+       
+        $user = Auth::user();
+ 
+        $grupos = Grupo::orderBy('grp_titulo')->paginate(10); 
+        return Inertia::render('Grupos/Index', ['grupos' => $grupos]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
-    {
-        //
+    {  
+        $request-> validate([
+            'grp_titulo' => 'required|max:50',
+            'grp_detalle' => 'required|max:200',
+        ]);
+
+        Grupo::create($request->all());
+        return redirect()->back()->with('success', 'Grupo creado exitosamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+
+    public function update(Request $request, $id)
     {
-        //
+        $grupos = Grupo::find($id);
+        $grupos->fill($request->input())->saveOrFail();
+        return redirect()->back()->with('success', 'Grupo actualizado correctamente');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+  
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $grupo = Grupo::find($id);
+        if (!$grupo) {
+            return response()->json(['message' => 'Proveedor no encontrado'], Response::HTTP_NOT_FOUND);
+        }
+        $grupo->delete();
+
+         return redirect()->back()->with('success','Grupo eliminado correctamente');
+        
     }
+
+    
 }

@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('grupos', function (Blueprint $table) {
-            $table->increments('id');
-            $table->foreignId('grp_empresa_id')->constrained('empresas')->onDelete('cascade'); // Clave foránea
+            $table->increments('id');         
             $table->string('grp_titulo',60);
             $table->string('grp_detalle',100);
             $table->string('grp_estado',1);
