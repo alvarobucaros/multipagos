@@ -52,7 +52,7 @@ class GrupoController extends Controller
     {
         $grupo = Grupo::find($id);
         if (!$grupo) {
-            return response()->json(['message' => 'Proveedor no encontrado'], Response::HTTP_NOT_FOUND);
+            return response()->json(['message' => 'Post no encontrado'], Response::HTTP_NOT_FOUND);
         }
         $grupo->delete();
 

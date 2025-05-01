@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Grupo;
+use App\Models\Empresa;
+
 use Illuminate\Http\Response; // Para respuestas HTTP
 
 use Illuminate\Http\Request;
@@ -18,9 +20,10 @@ class PostController extends Controller
             
         $posts = Post::where('posts.id','>',0) 
         ->join('grupos', 'posts.pos_grupo_id', '=', 'grupos.id')
-        ->select('grupos.id', 'pos_titulo','grupos.grp_titulo', 'posts.pos_descripcion', 
+        ->select('posts.id', 'pos_titulo','grupos.grp_titulo', 'posts.pos_descripcion', 
             'posts.pos_estado', 'posts.pos_imagen' ) 
         ->orderBy('posts.created_at', 'desc') 
+        ->orderBy('grp_titulo')
         ->orderBy('pos_titulo')  
         ->paginate(10);   
 
@@ -33,6 +36,30 @@ class PostController extends Controller
         return Inertia::render('Posts/Index', [
             'grupos' => $grupos,
             'posts' => $posts,
+        ]);
+    }
+
+    public function indexPost()
+    {
+
+      //  Recupera post por orden desc a la fecha de creación
+            
+        $posts = Post::where('posts.id','>',0) 
+        ->join('grupos', 'posts.pos_grupo_id', '=', 'grupos.id')
+        ->select('posts.id', 'pos_titulo','grupos.grp_titulo', 'posts.pos_descripcion', 
+            'posts.pos_estado', 'posts.pos_imagen' ) 
+        ->orderBy('posts.created_at', 'desc') 
+        ->orderBy('grp_titulo')
+        ->orderBy('pos_titulo')  
+        ->paginate(6);   
+
+        $empresa = Empresa::first();
+        if (!$empresa) {
+            $empresa = new Empresa();
+        }
+
+        return Inertia::render('Dashboard', [
+            'posts' => $posts, 'empresa' => $empresa,
         ]);
     }
 
@@ -67,7 +94,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         if (!$post) {
-            return response()->json(['message' => 'Proveedor no encontrado'], Response::HTTP_NOT_FOUND);
+            return response()->json(['message' => 'Post no encontrado'], Response::HTTP_NOT_FOUND);
         }
         $post->delete();
 

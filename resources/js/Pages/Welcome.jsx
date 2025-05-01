@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 
-export default function Welcome({ auth, laravelVersion, phpVersion }) {
+export default function Welcome({ auth, laravelVersion, phpVersion, appVersion }) {
     const handleImageError = () => {
         document
             .getElementById('screenshot-container')
@@ -21,8 +21,8 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                     <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                         <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
                             <div className="flex lg:col-start-2 lg:justify-center">
-                            <img className='py-8' src="../images/logomp.jpg" alt="Logo empresa"  />
-                            </div>
+                            <img className='py-8' src="../images/logomb.png" alt="Logo empresa"  />
+                            </div> 
                             <nav className="-mx-3 flex flex-1 justify-end">
                                 {auth.user ? (
                                     <Link
@@ -47,7 +47,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         </main>
 
                         <footer className="py-16 text-center text-sm text-black dark:text-white/70">
-                            Laravel v{laravelVersion} (PHP v{phpVersion})
+                           Versión v{appVersion} &#169; Laravel v{laravelVersion} (PHP v{phpVersion})
                         </footer>
                     </div>
                 </div>

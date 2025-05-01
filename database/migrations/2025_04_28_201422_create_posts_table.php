@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('pos_titulo');
             $table->text('pos_descripcion');
             $table->string('pos_imagen')->nullable();
-            $table->boolean('pos_estado');
+            $table->boolean('pos_estado',10);
             $table->timestamps();
         });
     }

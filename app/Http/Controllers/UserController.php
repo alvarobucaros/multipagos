@@ -71,7 +71,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'Proveedor no encontrado'], Response::HTTP_NOT_FOUND);
+            return response()->json(['message' => 'Usuario no encontrado'], Response::HTTP_NOT_FOUND);
         }
         $user->delete();
 

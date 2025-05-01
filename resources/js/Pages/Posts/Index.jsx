@@ -35,7 +35,7 @@ export default function Post(props) {
         setOperation(op);
         if(op === 1){
             setTitle('Añadir post');
-            setData({pos_grupo_id: '', pos_titulo: '', pos_descripcion: '', pos_imagen: '', pos_estado:'A'});   
+            setData({pos_grupo_id: '', pos_titulo: '', pos_descripcion: '', pos_imagen: 'postcolor', pos_estado:'A'});   
         }
         else{
             setTitle('Modificar post');
@@ -48,8 +48,9 @@ export default function Post(props) {
     
     const estadoOptions = [
         { value: '', label: '-- Selecciona un estado --' }, // Opción por defecto/placeholder
-        { value: 'A', label: 'Activo' },
-        { value: 'I', label: 'Inactivo' },
+        { value: 'Actual', label: 'Actulidad' },
+        { value: 'Info', label: 'Informativo' },
+        { value: 'Espec', label: 'Especial' },
     ];
 
     const save = (e) =>{
