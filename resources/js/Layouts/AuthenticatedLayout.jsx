@@ -5,22 +5,21 @@ import {usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function AuthenticatedLayout({ header, children, empresa }) {
+export default function AuthenticatedLayout({ header, children, empresa=[] }) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
     const [u, setU] = useState(0);
-   // const [empresa, setEmpresa] = useState(null);
     const [error, setError] = useState(null);
-  //  const [miEmpresa, setMiEmpresa] = useState([]);
+ 
 
 
     return (
      
         <div className="min-h-screen bg-gray-100">
 
-            <div display="none">
+            {/* <div display="block">
                 <div>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     {empresa ? (
@@ -32,23 +31,29 @@ export default function AuthenticatedLayout({ header, children, empresa }) {
                         !error && <p>Cargando datos de la empresa...</p> // Muestra un mensaje de carga
                     )}
                 </div>
-            </div> 
+            </div>  */}
 
             <nav className="border-b border-gray-100 bg-white">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <div>                             
-                                    <h3 className='bg-amber-300 px-4'>ENTRADAS AL BLOG  </h3>                            
-                                </div>
+                        <div className="flex content-around">
+                        <div className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md">
+ 
+                            <img src={`/images/${empresa.emp_logo}`} alt="Logo Empresa" className="w-20 h-10" />
+                            <div className='wx-4'>
+                                <h2 className="text-lg text-center font-semibold text-gray-800">{empresa.emp_nombre} </h2>
+                                <p className="text-center  text-gray-600">{empresa.emp_eslogan}</p>
+                              
+                            </div>
+                            <div text-lg text-green-600>  <h2> PUBLICACIONES </h2></div>
                             </div>
 
-                         </div>
+
+                        </div>
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
                             <div className="relative ms-3">
-                                <Dropdown>
+                                {/* <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
                                             <button
@@ -82,7 +87,7 @@ export default function AuthenticatedLayout({ header, children, empresa }) {
                                             Log Out
                                         </Dropdown.Link>
                                     </Dropdown.Content>
-                                </Dropdown>
+                                </Dropdown> */}
                             </div>
                         </div>
 
@@ -137,7 +142,7 @@ export default function AuthenticatedLayout({ header, children, empresa }) {
                 >
      
 
-                    <div className="border-t border-gray-200 pb-1 pt-4">
+                    {/* <div className="border-t border-gray-200 pb-1 pt-4">
 
 
                         <div className="mt-3 space-y-1">
@@ -152,7 +157,7 @@ export default function AuthenticatedLayout({ header, children, empresa }) {
                                 Log Out
                             </ResponsiveNavLink>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </nav>
 

@@ -6,11 +6,10 @@ import { Head, Link , usePage} from '@inertiajs/react';
 
 import MiCard from '@/Components/MiCard';
 
-export default function Dashboard() {
+export default function Dashboard(props) {
     const user = usePage().props.auth.user;
-    const empresa = usePage().props.empresas;
-    const [modal,setModal] = useState(true);
-
+//    const [modal,setModal] = useState(true);
+    const [empresa, setEmpresa] = useState(props.empresa);
     const openModal = () =>{
         setModal(true);
     }
@@ -34,16 +33,16 @@ export default function Dashboard() {
         >
    
         <Head title="MultiBlog" />
-            {user.name ? ( 
+            {/* {user.name ? (  */}
 
             <>
                 <MiCard titulo={titulo[0]} texto={texto[0]} imagen={imagen[0]}></MiCard>
                 <MiCard titulo={titulo[1]} texto={texto[1]} imagen={imagen[1]}></MiCard>
                 <MiCard titulo={titulo[2]} texto={texto[2]} imagen={imagen[2]}></MiCard>
             </>
-                ) : (
+                {/* ) : (
                 'Debe autenticarse'
-               )} 
+               )}  */}
         </AuthenticatedLayout>
     );
 }

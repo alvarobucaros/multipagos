@@ -39,6 +39,16 @@ class PostController extends Controller
         ]);
     }
 
+    public function indexDoc()
+    {        
+        return Inertia::render('Documentacion');
+    }
+
+    public function indexMenu()
+    {        
+        return Inertia::render('MiMenu');
+    }
+      
     public function indexPost()
     {
 

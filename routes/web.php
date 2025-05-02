@@ -10,18 +10,21 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\EmpresaController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'appVersion' => '1.0.0 - beta ', 
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Posts/Index', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'appVersion' => '1.0.0 - beta ', 
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
+Route::get('/', [PostController::class, 'indexPost'])->name('/');
 
 Route::get('/dashboard', [PostController::class, 'indexPost'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/mimenu', [PostController::class, 'indexMenu'])->middleware(['auth', 'verified'])->name('mimenu');
+Route::get('/docs', [PostController::class, 'indexDoc'])->middleware(['auth', 'verified'])->name('docs');
 
 Route::get('/post', [PostController::class, 'index'])->name('post');
 Route::get('/post', [PostController::class, 'index'])->name('post');

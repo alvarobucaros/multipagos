@@ -21,6 +21,7 @@ class Empresa extends Model
         'emp_telefono',
         'emp_email',
         'emp_logo',
+        'emp_eslogan',
     ];
 
 

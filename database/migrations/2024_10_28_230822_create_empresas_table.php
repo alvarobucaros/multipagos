@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('emp_telefono', 20);
             $table->string('emp_email', 100);
             $table->string('emp_logo', 100);
+             $table->string('emp_eslogan', 100);
             $table->timestamps();
         });
     }

@@ -123,7 +123,11 @@ export default function Post(props) {
                     </button>
                 </>
             )}
- 
+             <Link
+                 href="/mimenu"
+                 className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
+                 > Regreso
+             </Link>
             <span className='bg-blue-100'> POSTS </span> 
             <div className="bg-white grid v-screen place-items-center py-1">
                 <table className="w-full border-collapse border border-gray-300">
