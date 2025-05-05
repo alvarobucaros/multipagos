@@ -140,7 +140,7 @@ export default function Grupo(props) {
                                 <td className='border border-gray-400 px-2 py-1'>{grupo.grp_detalle}</td>
                                 <td className='border border-gray-400 px-2 py-1'>{grupo.grp_estado}</td>
                                 {role !== 'User' && (
-                                      <> {/* <-- Fragmento para agrupar los td */}
+                                      <> {/* <-- Fragmento  para agrupar los td */}
                                 <td className='border border-gray-400 px-2 py-1'>
                                     <button
                                     className="bg-yellow-500 text-white px-2 py-1 rounded"

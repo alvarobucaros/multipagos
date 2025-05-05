@@ -194,7 +194,7 @@ export default function Post(props) {
                             <MiTextArea Id="pos_descripcion" Rows="2" Cols="120" Label="Detalles" 
                             classNameI="md:col-span-2" data ={data.pos_descripcion} required={true} 
                             OnChange={handleChange}></MiTextArea>
-                            
+                            <br />
                             <MiLista Id="pos_estado"  Label="Estado"  classNameI="md:col-span-2"  data ={data.pos_estado} 
                             options = {estadoOptions} OnChange={handleChange} required={true}></MiLista>
             
