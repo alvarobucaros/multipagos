@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 // - Id: El atributo 'name' del select (importante para useForm y HTML) y 'htmlFor' de la etiqueta
 // - data: El valor actualmente seleccionado (viene del estado del formulario padre, ej: data.prv_estado)
 // - options: Un array de objetos, cada uno con { value: '...', label: '...' }
-// - onChange: La función para manejar el cambio (generalmente para actualizar el estado del formulario padre, ej: e => setData('prv_estado', e.target.value))
+// - OnChange: La función para manejar el cambio (generalmente para actualizar el estado del formulario padre, ej: e => setData('prv_estado', e.target.value))
 // - required: Booleano para marcar el campo como requerido (opcional)
 
 
@@ -35,8 +35,7 @@ export default function MiSelectDinamico({Id, Label, data, listas = [],  OnChang
                         {lista.opcion}
                     </option>
                 ))}
-            </select>
-           
+            </select>     
         </div>
     );
 }

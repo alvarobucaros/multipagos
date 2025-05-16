@@ -25,7 +25,7 @@ class UserController extends Controller
         return Inertia::render('Users/Index',['users'=>$users]); 
     }
 
-   // id, empresa_id, name, email, email_verified_at, password, role
+   // id, sociedad_id, name, email, email_verified_at, password, role
 
     /**
      * Store a newly created resource in storage.
@@ -33,7 +33,7 @@ class UserController extends Controller
     public function store(Request $request)
     {  
         $request-> validate([
-            'empresa_id' => 'required',
+            'sociedad_id' => 'required',
             'name' => 'required|max:100',
             'email' => 'required|max:100',
             'password' => 'required|max:100',

@@ -8,26 +8,30 @@ export default function MiMenu(props) {
     return (
         <AuthenticatedLayoutMenu
             auth={props.auth}
-    
         >
             <div className="p-6">
-
-
-                <div className='grid grid-cols-5 gap-4'>
+                <div className='grid grid-cols-7 gap-4'>
                     <Link href="/grupo" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Grupos</h3>
                     </Link>
-                    <Link href="/post" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
-                        <h3 className='text-center'>Posts</h3>
+                    <Link href="/socios" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <h3 className='text-center'>Terceros</h3>
                     </Link>
-                    <Link href="/user" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
-                        <h3 className='text-center'>Usuarios</h3>
+                    <Link href="/concepto" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <h3 className='text-center'>Conceptos</h3>
                     </Link>
-                    <Link href="/empresa" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
-                        <h3 className='text-center'>Mi Empresa</h3>
+
+                    <Link href="/docs" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <h3 className='text-center'>Cuentas</h3>
                     </Link>
                     <Link href="/docs" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
-                        <h3 className='text-center'>Documentación</h3>
+                        <h3 className='text-center'>Ingreso Gasto</h3>
+                    </Link>
+                    <Link href="/docs" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <h3 className='text-center'>Anticipos</h3>
+                    </Link>                    
+                    <Link href="/sociedad/1" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <h3 className='text-center'>Mi Empresa</h3>
                     </Link>
                 </div>
             </div>

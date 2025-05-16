@@ -17,11 +17,12 @@ export default function Grupo(props) {
     const { data,setData,delete:destroy,post,put,
     processing,reset,errors} = useForm({
         id:'',       
-        grp_empresa_id:user.empresa_id,
+        grp_sociedad_id:user.sociedad_id,
         grp_titulo: '',
         grp_detalle: '',
         grp_estado: 'A',
     });
+ //      grp_sociedad_id,       grp_titulo,       grp_detalle,       grp_estado,
 
     const [role, setRole] = useState(user.role) 
     
@@ -30,7 +31,7 @@ export default function Grupo(props) {
         setOperation(op);
         if(op === 1){
             setTitle('Añadir grupo');
-            setData({grp_empresa_id:user.empresa_id, grp_titulo:'', grp_detalle:'', grp_estado:'A'});   
+            setData({grp_sociedad_id:user.sociedad_id, grp_titulo:'', grp_detalle:'', grp_estado:'A'});   
         }
         else{
             setTitle('Modificar grupo');

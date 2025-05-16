@@ -24,7 +24,7 @@ return (
                     <div className="flex">
                         <div className="flex shrink-0 items-center">
                             <div className="flex lg:col-start-2 lg:justify-center">
-                                <img className='py-8' src="../images/logomb.png" width="220" height="100" alt="Logo empresa"  />
+                                <img className='py-8' src="../images/logomp.png" width="220" height="100" alt="Logo empresa"  />
                             </div>
                         </div>
                     </div>

@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'empresa_id',
+        'sociedad_id',
         'name',
         'email',
         'password',
@@ -49,8 +49,10 @@ class User extends Authenticatable
     }
 
   
-    public function empresa()
+    public function sociead()
     {
-        return $this->belongsTo(Empresa::class, 'empresa_id');
+        return $this->belongsTo(Sociedad::class, 'sociedad_id');
     }
 }
+
+

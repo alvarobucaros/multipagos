@@ -4,11 +4,12 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\ConceptoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController; 
 use App\Http\Controllers\GrupoController;
-use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\SociedadController;
 
 // Route::get('/', function () {
 //     return Inertia::render('Posts/Index', [
@@ -26,12 +27,11 @@ Route::get('/dashboard', [PostController::class, 'indexPost'])->middleware(['aut
 Route::get('/mimenu', [PostController::class, 'indexMenu'])->middleware(['auth', 'verified'])->name('mimenu');
 Route::get('/docs', [PostController::class, 'indexDoc'])->middleware(['auth', 'verified'])->name('docs');
 
-Route::get('/post', [PostController::class, 'index'])->name('post');
-Route::get('/post', [PostController::class, 'index'])->name('post');
-Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
-Route::post('/post', [PostController::class, 'store'])->name('post.store');
-Route::put('/post/{id}', [PostController::class, 'update'])->name('post.update');
-Route::delete('/post/{id}', [PostController::class, 'destroy'])->name('post.destroy');
+Route::get('/concepto', [ConceptoController::class, 'index'])->name('concepto');
+Route::get('/concepto/{id}', [ConceptoController::class, 'show'])->name('concepto.show');
+Route::post('/concepto', [ConceptoController::class, 'store'])->name('concepto.store');
+Route::put('/concepto/{id}', [ConceptoController::class, 'update'])->name('concepto.update');
+Route::delete('/concepto/{id}', [ConceptoController::class, 'destroy'])->name('concepto.destroy');
 
 Route::get('/grupo', [GrupoController::class, 'index'])->name('grupo');
 Route::get('/grupo/{id}', [GrupoController::class, 'show'])->name('grupo.show');
@@ -39,11 +39,11 @@ Route::post('/grupo', [GrupoController::class, 'store'])->name('grupo.store');
 Route::put('/grupo/{id}', [GrupoController::class, 'update'])->name('grupo.update');
 Route::delete('/grupo/{id}', [GrupoController::class, 'destroy'])->name('grupo.destroy');
 
-Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa');
-Route::get('/empresa/{id}', [EmpresaController::class, 'show'])->name('empresa.show');
-Route::post('/empresa', [EmpresaController::class, 'store'])->name('empresa.store');
-Route::put('/empresa/{id}', [EmpresaController::class, 'update'])->name('empresa.update');
-Route::delete('/empresa/{id}', [EmpresaController::class, 'destroy'])->name('empresa.destroy');
+Route::get('/sociedad', [SociedadController::class, 'index'])->name('sociedad');
+Route::get('/sociedad/{id}', [SociedadController::class, 'show'])->name('sociedad.show');
+Route::post('/sociedad', [SociedadController::class, 'store'])->name('sociedad.store');
+Route::put('/sociedad/{id}', [SociedadController::class, 'update'])->name('sociedad.update');
+Route::delete('/sociedad/{id}', [SociedadController::class, 'destroy'])->name('sociedad.destroy');
 
 Route::get('/user', [UserController::class, 'index'])->name('user');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');

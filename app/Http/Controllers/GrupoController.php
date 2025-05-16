@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response; // Para respuestas HTTP 
