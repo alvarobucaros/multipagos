@@ -10,6 +10,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController; 
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\SociedadController;
+use App\Http\Controllers\SocioController;
 
 // Route::get('/', function () {
 //     return Inertia::render('Posts/Index', [
@@ -44,6 +45,12 @@ Route::get('/sociedad/{id}', [SociedadController::class, 'show'])->name('socieda
 Route::post('/sociedad', [SociedadController::class, 'store'])->name('sociedad.store');
 Route::put('/sociedad/{id}', [SociedadController::class, 'update'])->name('sociedad.update');
 Route::delete('/sociedad/{id}', [SociedadController::class, 'destroy'])->name('sociedad.destroy');
+
+Route::get('/socio', [SocioController::class, 'index'])->name('socio');
+Route::get('/socio/{id}', [SocioController::class, 'show'])->name('socio.show');
+Route::post('/socio', [SocioController::class, 'store'])->name('socio.store');
+Route::put('/socio/{id}', [SocioController::class, 'update'])->name('socio.update');
+Route::delete('/socio/{id}', [SocioController::class, 'destroy'])->name('socio.destroy');
 
 Route::get('/user', [UserController::class, 'index'])->name('user');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');

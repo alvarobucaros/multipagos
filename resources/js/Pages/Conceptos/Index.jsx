@@ -19,7 +19,7 @@ export default function Concepto(props) {
 
     const { data,setData,delete:destroy,post,put,
     processing,reset,errors} = useForm({
-        id:'',  
+        id:'',
         con_sociedad_id:user.sociedad_id,
         con_tipo: '',
         con_titulo: '',
@@ -350,9 +350,9 @@ export default function Concepto(props) {
 
                                 <MiInput  Id="con_cuotas" Type="text" Label="Nro de Cuotas" onChange={handleChange}
                                 classNameI="" maxLength ="20" data ={data.con_cuotas} required={false}  
-                                OnChange = {handleChange} ></MiInput>
+                                OnChange = {handleChange} onBlur={calcularCuota}></MiInput>
 
-                                <input type="text" name="con_valorCuota" id="con_valorCuota" 
+                                <input type="text" name="con_valorCuota" id="con_valorCuota" onBlur={calcularCuota}
                                 value={data.con_valorCuota} readonly='yes'/>
 
                                 {/* <MiInput  Id="con_valorCuota" Type="text" Label="Valor de la Cuotas" onChange={handleChange}

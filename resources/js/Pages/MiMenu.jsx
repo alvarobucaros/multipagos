@@ -14,7 +14,7 @@ export default function MiMenu(props) {
                     <Link href="/grupo" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Grupos</h3>
                     </Link>
-                    <Link href="/socios" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                    <Link href="/socio" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Terceros</h3>
                     </Link>
                     <Link href="/concepto" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
