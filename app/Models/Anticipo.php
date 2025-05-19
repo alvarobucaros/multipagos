@@ -15,10 +15,11 @@ class Anticipo extends Model
         'id', 
         'ant_sociedad_id',
         'ant_socio_id',
-        'ant_Fecha',
+        'ant_fecha',
         'ant_detalle',
         'ant_valor',
-        'ant_saldo'
+        'ant_saldo',
+        'ant_estado',
     ];
 
 }

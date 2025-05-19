@@ -11,24 +11,25 @@ import React, { useState } from 'react';
 
 export default function MiSelectDinamico({Id, Label, data, listas = [],  OnChange, required}) 
 {
-    const [inputValue, setInputValue] = useState(data || ''); // Inicializa con el valor de "data"
+    // const [inputValue, setInputValue] = useState(data || ''); // Inicializa con el valor de "data"
 
-    const handleChange = (event) => {
-        setInputValue(event.target.value); // Actualiza el estado cuando cambia el input
-    };
+    // const handleChange = (event) => {
+    //     setInputValue(event.target.value); // Actualiza el estado cuando cambia el input
+    // };
+
     return (
         <div>  
-            <label htmlFor={Id} className="block text-sm font-medium text-gray-700">{Label} </label>
+            <label htmlFor={Id} className="block text-sm font-medium text-gray-700">{Label}  </label>
 
             <select
                 id={Id}
                 name={Id}
-                value={data} 
+                value={data || ''} 
                 onChange={OnChange} 
                 required={required}
                 className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100 'border-gray-300'}`}
             >
-                <option value="">Selecione una opción</option>
+                <option value="">Selecione una opción {data}</option>
                 {/* Renderiza las opciones pasadas */}
                 {listas.map((lista) => (
                     <option key={lista.id} value={lista.id}>

@@ -14,15 +14,19 @@ return new class extends Migration
      
         Schema::create('cuentas', function (Blueprint $table) { 
             $table->id();
-            $table->unsignedBigInteger('cxc_sociedad_id');
+            $table->unsignedBigInteger('cxc_head_id');
             $table->unsignedBigInteger('cxc_socio_id');
             $table->unsignedBigInteger('cxc_concepto_id');
-            $table->integer('cxc_idGrupo');
-            $table->date('cxc_fechaProceso');
+            $table->unsignedBigInteger('cxc_grupo_id');
+            $table->date('cxc_fecha');
             $table->decimal('cxc_valor',12,2);
             $table->decimal('cxc_saldo',12,2);
-            $table->string('cxc_activa');
             $table->timestamps();
+
+            $table->foreign('cxc_head_id')
+                ->references('id')
+                ->on('cuentashead')
+                ->onDelete('cascade');
             $table->foreign('cxc_sociedad_id')
                 ->references('id')
                 ->on('sociedades')

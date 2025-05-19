@@ -21,13 +21,13 @@ export default function MiMenu(props) {
                         <h3 className='text-center'>Conceptos</h3>
                     </Link>
 
-                    <Link href="/docs" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
-                        <h3 className='text-center'>Cuentas</h3>
+                    <Link href="/cuentahead" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <h3 className='text-center'>Cuentas Cobro</h3>
                     </Link>
-                    <Link href="/docs" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                    <Link href="/ingregasto" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Ingreso Gasto</h3>
                     </Link>
-                    <Link href="/docs" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                    <Link href="/anticipo" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Anticipos</h3>
                     </Link>                    
                     <Link href="/sociedad/1" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">

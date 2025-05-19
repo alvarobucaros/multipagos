@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('ant_sociedad_id');
             $table->unsignedBigInteger('ant_socio_id');
-            $table->date('ant_Fecha');
-            $table->string('ant_detalle');
-            $table->decimal('ant_Valor',12,2);
-            $table->decimal('ant_Saldo',12,2);
+            $table->date('ant_fecha');
+            $table->string('ant_detalle',200);
+            $table->decimal('ant_valor',12,2);
+            $table->decimal('ant_saldo',12,2);
+            $table->string('ant_estado', 1);
             $table->timestamps();
 
             $table->foreign('ant_sociedad_id')

@@ -17,21 +17,21 @@ export default function AuthenticatedLayout({ header, children, empresa=[] }) {
 
     return (
      
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-green-100 ">
 
             <nav className="border-b border-gray-100 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
+                    <div className="flex h-16 justify-between ">
                         <div className="flex content-around">
-                            <div className="flex items-center space-x-4 bg-white  rounded-lg ">
+                            <div className="flex items-center space-x-4 rounded-lg ">
     
-                                <img src={`/images/${empresa.emp_logo}`} alt="Logo Empresa" className="w-40 h-20" />
+                                <img src={`/images/logomp.png`} alt="Logo Empresa" className="w-40 h-10" />
                                 <div className='wx-4'>
                                     <h2 className="text-lg text-center font-semibold text-gray-800">{empresa.emp_nombre} </h2>
                                     <p className="text-center  text-gray-600">{empresa.emp_eslogan}</p>
                                 
                                 </div>
-                                <div>  <h2 className='text-lg text-green-600 font-bold'> PUBLICACIONES </h2></div>
+                                <div>  <h2 className='text-lg text-green-600 font-bold'> MULTI <strong>PAGOS</strong> </h2></div>
                             </div>
                         </div>
 

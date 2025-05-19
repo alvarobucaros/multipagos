@@ -52,7 +52,7 @@ class PostController extends Controller
     public function indexPost()
     {
 
-      //  Recupera post por orden desc a la fecha de creación
+      // Recupera post por orden desc a la fecha de creación
             
         $posts = Post::where('posts.id','>',0) 
         ->join('grupos', 'posts.pos_grupo_id', '=', 'grupos.id')

@@ -35,9 +35,6 @@ class ConceptoController extends Controller
         return Inertia::render('Conceptos/Index', ['conceptos' => $conceptos, 'grupos' => $grupos]);
     }
 
-  
-
-
     public function store(Request $request)
     {  
         $request-> validate([

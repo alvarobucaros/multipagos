@@ -21,7 +21,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, appVersion }
                     <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                         <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
                             <div className="flex lg:col-start-2 lg:justify-center">
-                            <img className='py-8' src="../images/logomb.png" alt="Logo empresa"  />
+                            <img className='py-8' src="../images/logomp.png" alt="Logo empresa"  />
                             </div> 
                             <nav className="-mx-3 flex flex-1 justify-end">
                                 {auth.user ? (
