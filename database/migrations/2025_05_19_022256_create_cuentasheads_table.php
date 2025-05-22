@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cuentasheads', function (Blueprint $table) {
+        Schema::create('cuentashead', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('cxh_sociedad_id');
@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('cxh_detalle',100);          
             $table->decimal('cxh_valor',12,2);
             $table->integer('cxh_cuotas');
+            $table->integer('cxh_grupo');
             $table->date('cxh_fchinicio');
             $table->string('cxh_nrocxc');
             $table->decimal('cxh_total',12,2);

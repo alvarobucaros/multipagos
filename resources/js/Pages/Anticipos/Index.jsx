@@ -153,7 +153,7 @@ export default function anticipo(props) {
 
   //  Método para el formulario
 
-        function validate(){
+    function validate(){
         return(true)
     }
 

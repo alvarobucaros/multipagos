@@ -27,10 +27,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('cuentashead')
                 ->onDelete('cascade');
-            $table->foreign('cxc_sociedad_id')
-                ->references('id')
-                ->on('sociedades')
-                ->onDelete('cascade');
+
             $table->foreign('cxc_socio_id')
                 ->references('id')
                 ->on('socios')

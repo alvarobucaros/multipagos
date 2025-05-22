@@ -9,6 +9,7 @@ use App\Http\Controllers\ConceptoController;
 use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\CuentasheadController;
 use App\Http\Controllers\IngregastoController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController; 
@@ -21,7 +22,7 @@ use App\Http\Controllers\SocioController;
 //         'canLogin' => Route::has('login'),
 //         'canRegister' => Route::has('register'),
 //         'laravelVersion' => Application::VERSION,
-//         'appVersion' => '1.0.0 - beta ', 
+//         'appVersion' => '1.0.0 - beta ',  
 //         'phpVersion' => PHP_VERSION,
 //     ]);
 // });
@@ -56,18 +57,27 @@ Route::get('/cuentahead/{id}', [CuentasheadController::class, 'show'])->name('cu
 Route::post('/cuentahead', [CuentasheadController::class, 'store'])->name('cuentahead.store');
 Route::put('/cuentahead/{id}', [CuentasheadController::class, 'update'])->name('cuentahead.update');
 Route::delete('/cuentahead/{id}', [CuentasheadController::class, 'destroy'])->name('cuentahead.destroy');
+Route::put('/cuentaheadDis/{id}', [CuentasheadController::class, 'updateDis'])->name('cuentahead.updateDis');
 
 Route::get('/grupo', [GrupoController::class, 'index'])->name('grupo');
 Route::get('/grupo/{id}', [GrupoController::class, 'show'])->name('grupo.show');
-Route::post('/grupo', [GrupoController::class, 'store'])->name('grupo.store');
 Route::put('/grupo/{id}', [GrupoController::class, 'update'])->name('grupo.update');
 Route::delete('/grupo/{id}', [GrupoController::class, 'destroy'])->name('grupo.destroy');
+Route::get('/grupoPart/{id}', [GrupoController::class, 'updatePart'])->name('grupo.updatePart');
+Route::post('/grupo', [GrupoController::class, 'store'])->name('grupo.store');
+Route::post('/grupoAct', [GrupoController::class, 'storeAct'])->name('grupo.storeAct');
 
 Route::get('/ingregasto', [IngregastoController::class, 'index'])->name('ingregasto');
 Route::get('/ingregasto/{id}', [IngregastoController::class, 'show'])->name('ingregasto.show');
 Route::post('/ingregasto', [IngregastoController::class, 'store'])->name('ingregasto.store');
 Route::put('/ingregasto/{id}', [IngregastoController::class, 'update'])->name('ingregasto.update');
 Route::delete('/ingregasto/{id}', [IngregastoController::class, 'destroy'])->name('ingregasto.destroy');
+
+Route::get('/pago', [PagoController::class, 'index'])->name('pago');
+Route::get('/pago/{id}', [PagoController::class, 'show'])->name('pago.show');
+Route::post('/pago', [PagoController::class, 'store'])->name('pago.store');
+Route::put('/pago/{id}', [PagoController::class, 'update'])->name('pago.update');
+Route::delete('/pago/{id}', [PagoController::class, 'destroy'])->name('pago.destroy');
 
 Route::get('/sociedad', [SociedadController::class, 'index'])->name('sociedad');
 Route::get('/sociedad/{id}', [SociedadController::class, 'show'])->name('sociedad.show');

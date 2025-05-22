@@ -20,7 +20,8 @@ class Cuentahead extends Model
         'cxh_fchinicio',
         'cxh_nrocxc',        
         'cxh_total',
-        'cxh_saldo'
+        'cxh_saldo',
+        'cxh_grupo'
     ];
 
     public function sociedad()

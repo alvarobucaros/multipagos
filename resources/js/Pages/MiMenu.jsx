@@ -10,7 +10,7 @@ export default function MiMenu(props) {
             auth={props.auth}
         >
             <div className="p-6">
-                <div className='grid grid-cols-7 gap-4'>
+                <div className='grid grid-cols-8 gap-4'>
                     <Link href="/grupo" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Grupos</h3>
                     </Link>
@@ -23,6 +23,9 @@ export default function MiMenu(props) {
 
                     <Link href="/cuentahead" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Cuentas Cobro</h3>
+                    </Link>
+                    <Link href="/pago" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <h3 className='text-center'>Pagos</h3>
                     </Link>
                     <Link href="/ingregasto" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Ingreso Gasto</h3>

@@ -93,6 +93,34 @@ export default function Grupo(props) {
         });
     }
 
+    const participantes = (id, titulo) =>{
+        if(id===1){
+            alert('Este es el grupo de todos, todos son participantes !');
+            return;          
+
+        }
+        const alerta = Swal.mixin({ buttonsStyling:true});
+            alerta.fire({
+            title:'Une socios al grupo '+id + ' - ' + titulo,
+            text:'Crea los particpantes de este grupo',
+            icon:'question', showCancelButton:true,
+            confirmButtonText: '<i class="fa-solid fa-check"></i> Si, aplicar',
+            cancelButtonText:'<i class="fa-solid fa-ban"></i>No, Regresar'
+        }).then((result) => {
+            if(result.isConfirmed){
+                Inertia.get(`/grupoPart/${id}`, {
+                    onSuccess: () => {
+                        alert('participantes  exitosamente.');
+                    },
+                    onError: (errors) => {
+                        console.error('Error al aplicar participantes:', errors);
+                    },
+                });
+            }
+        });
+
+    }
+
     function handleChange(e) {
         const { name, value } = e.target;
         setData((Data) => ({
@@ -121,7 +149,7 @@ export default function Grupo(props) {
                 className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
                 > Regreso
             </Link>
-            <span className='bg-blue-100'> GRUPOS DE POSTS</span> 
+            <span className='bg-blue-100'> GRUPOS DE SOCIOS </span> 
             <div className="bg-white grid v-screen place-items-center py-1">
                 <table className="w-full border-collapse border border-gray-300">
                     <thead>
@@ -130,7 +158,7 @@ export default function Grupo(props) {
                             <th className='px-2 py-1'>TITULO</th>
                             <th className='px-2 py-1'>DETALLE</th>
                             <th className='px-2 py-1'>ESTADO</th>
-                            <th className='px-2 py-1' colSpan={2}></th>
+                            <th className='px-2 py-1' colSpan={3}>COMANDOS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,6 +179,13 @@ export default function Grupo(props) {
                                     }}
                                     >
                                     Editar
+                                    </button>
+                                </td>
+                                <td className='border border-gray-400 px-2 py-1'>
+                                    <button
+                                        className="bg-green-500 text-white px-2 py-1 rounded"
+                                        onClick={() => participantes(grupo.id,grupo.grp_titulo)}>
+                                        Participantes
                                     </button>
                                 </td>
                                 <td className='border border-gray-400 px-2 py-1'>
