@@ -114,10 +114,10 @@ class CuentasheadController extends Controller
     public function updateDis(string $id)
     {
         $cuentashead = Cuentahead::find($id);
-   
         $nro = 0;
         $total = 0;
         $valorCuota = 0;
+        $veces =  $cuentashead->cxh_cuotas;
         $fecha = $cuentashead->cxh_fchinicio;
         $grupo = $cuentashead->cxh_grupo;
         $concepto = $cuentashead->cxh_concepto_id;
@@ -128,24 +128,30 @@ class CuentasheadController extends Controller
         }
 
         if($grupo === 1){
-            $socios = Socio::where('soc_tiposocio','S');
+            $socios = Socio::where('soc_tiposocio','S')
+            ->select('id');
         }else{
-            $socios = Gruposocio::where('gsc_grupo_id', $id);
+            $socios = Gruposocio::where('gsc_grupo_id', $grupo)
+            ->select('id');;
         }
-
+   
         foreach ($socios->get() as $row){
-            DB::table('cuentas')->insert([
-                'cxc_head_id' => $id,
-                'cxc_socio_id' => $row->gsc_socio_id,
-                'cxc_concepto_id' => $concepto,
-                'cxc_grupo_id' => $grupo,
-                'cxc_fecha' => $fecha,
-                'cxc_valor' => $valorCuota,
-                'cxc_saldo' => $valorCuota,
-            ]);
-            $nro++;
-            $total += $valorCuota;
-            $fecha = date('Y-m-d', strtotime($fecha. ' +1 month'));
+            $fecha = $cuentashead->cxh_fchinicio;
+            for ($i = 0; $i < $veces; $i++) {                    
+                DB::table('cuentas')->insert([
+                    'cxc_head_id' => $id,
+                    'cxc_socio_id' => $row->id,
+                    'cxc_concepto_id' => $concepto,
+                    'cxc_grupo_id' => $grupo,
+                    'cxc_fecha' => $fecha,
+                    'cxc_valor' => $valorCuota,
+                    'cxc_saldo' => $valorCuota,
+                ]);
+                $nro++;
+                $total += $valorCuota;
+                $fecha = date('Y-m-d', strtotime($fecha. ' +1 month'));
+            }
+            
         }
         $cuentashead->update([
             'cxh_nrocxc' => $nro,

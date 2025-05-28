@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             'sdd_logo' => 'logo.png',
             'sdd_observaciones' => 'Esta es una empresa de pruebas',       
             'sdd_consecAjustes' => '0',
-            'sdd_consecRcaja' => '0',
+            'sdd_consecIngreso' => '0',
             'sdd_consecEgreso' => '0',
             'sdd_fchini'  => '01-01-2025',
             'sdd_estado' => 'A',

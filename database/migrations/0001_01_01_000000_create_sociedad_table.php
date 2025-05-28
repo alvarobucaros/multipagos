@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('sdd_observaciones')->nullable();
             $table->string('sdd_logo', 100);
             $table->decimal('sdd_consecAjustes',12,2);
-            $table->decimal('sdd_consecRcaja',12,2);
+            $table->decimal('sdd_consecIngreso',12,2);
             $table->decimal('sdd_consecEgreso',12,2);
             $table->date('sdd_fchini');
             $table->string('sdd_estado',1);

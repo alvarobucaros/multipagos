@@ -5,7 +5,7 @@ import {usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function AuthenticatedLayoutDoc({ header, children, empresa }) {
+export default function AuthenticatedLayoutDoc({ header, children, sociedad }) {
     const user = usePage().props.auth.user;
     const laravelVersion ='lar'; 
     const phpVersion = 'PHP'; 
@@ -26,6 +26,7 @@ return (
                             <div className="flex lg:col-start-2 lg:justify-center">
                                 <img className='py-8' src="../images/logomp.png" width="220" height="100" alt="Logo empresa"  />
                             </div>
+                             <p className="px-10 font-bold mb-2 font-stretch-expanded text-center text-sm text-slate-600 dark:text-white/70">{sociedad.sdd_nombre}</p>
                         </div>
                     </div>
 

@@ -5,7 +5,7 @@ import {usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function AuthenticatedLayout({ header, children, empresa=[] }) {
+export default function AuthenticatedLayout({ header, children, sociedad=[] }) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -25,10 +25,10 @@ export default function AuthenticatedLayout({ header, children, empresa=[] }) {
                         <div className="flex content-around">
                             <div className="flex items-center space-x-4 rounded-lg ">
     
-                                <img src={`/images/logomp.png`} alt="Logo Empresa" className="w-40 h-10" />
+                                <img src={`/images/logomp.png`} alt="Logo Sciedad" className="w-40 h-10" />
                                 <div className='wx-4'>
-                                    <h2 className="text-lg text-center font-semibold text-gray-800">{empresa.emp_nombre} </h2>
-                                    <p className="text-center  text-gray-600">{empresa.emp_eslogan}</p>
+                                    <h2 className="text-lg text-center font-semibold text-gray-800">{sociedad.sdd_nombre} </h2>
+                                    <p className="text-center  text-gray-600">{sociedad.sdd_logo}</p>
                                 
                                 </div>
                                 <div>  <h2 className='text-lg text-green-600 font-bold'> MULTI <strong>PAGOS</strong> </h2></div>

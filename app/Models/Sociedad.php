@@ -58,7 +58,7 @@ class Sociedad extends Model
         'sdd_observaciones',
         'sdd_logo',
         'sdd_consecAjustes',
-        'sdd_consecRcaja',
+        'sdd_consecIngreso',
         'sdd_consecEgreso',
         'sdd_fchini',
         'sdd_estado',

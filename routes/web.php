@@ -17,20 +17,21 @@ use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\SociedadController;
 use App\Http\Controllers\SocioController;
 
-// Route::get('/', function () {
-//     return Inertia::render('Posts/Index', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'appVersion' => '1.0.0 - beta ',  
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+Route::get('/', function () {
+    return Inertia::render('Auth/Login', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'appVersion' => '1.0.0 - beta ',  
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
 
-Route::get('/', [PostController::class, 'indexPost'])->name('/');
+//Route::get('/', [PostController::class, 'indexPost'])->name('/');
 
 Route::get('/dashboard', [PostController::class, 'indexPost'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/mimenu', [PostController::class, 'indexMenu'])->middleware(['auth', 'verified'])->name('mimenu');
+Route::get('/mimenu', [PostController::class, 'indexMenu'])->name('menu');
+//Route::get('/mimenu', [PostController::class, 'indexMenu'])->middleware(['auth', 'verified'])->name('mimenu');
 Route::get('/docs', [PostController::class, 'indexDoc'])->middleware(['auth', 'verified'])->name('docs');
 
 Route::get('/anticipo', [AnticipoController::class, 'index'])->name('anticipo');
@@ -78,6 +79,8 @@ Route::get('/pago/{id}', [PagoController::class, 'show'])->name('pago.show');
 Route::post('/pago', [PagoController::class, 'store'])->name('pago.store');
 Route::put('/pago/{id}', [PagoController::class, 'update'])->name('pago.update');
 Route::delete('/pago/{id}', [PagoController::class, 'destroy'])->name('pago.destroy');
+Route::post('/pagoCual/{id}', [PagoController::class, 'showCuales'])->name('pago.showCuales');
+Route::get('/pagoSocio/{id}', [PagoController::class, 'showPagos'])->name('pago.showPagos');
 
 Route::get('/sociedad', [SociedadController::class, 'index'])->name('sociedad');
 Route::get('/sociedad/{id}', [SociedadController::class, 'show'])->name('sociedad.show');

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Grupo;
 use App\Models\Empresa;
-
+use App\Models\Sociedad;
 use Illuminate\Http\Response; // Para respuestas HTTP
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,27 +16,8 @@ class PostController extends Controller
     public function index()
     {
 
-      //  Recupera post por orden desc a la fecha de creación
-            
-        $posts = Post::where('posts.id','>',0) 
-        ->join('grupos', 'posts.pos_grupo_id', '=', 'grupos.id')
-        ->select('posts.id', 'pos_titulo','grupos.grp_titulo', 'posts.pos_descripcion', 
-            'posts.pos_estado', 'posts.pos_imagen' ) 
-        ->orderBy('posts.created_at', 'desc') 
-        ->orderBy('grp_titulo')
-        ->orderBy('pos_titulo')  
-        ->paginate(10);   
-
-
-        $grupos = Grupo::where('grp_estado', 'A')
-        ->select('id', 'grp_titulo  as opcion')
-        ->orderBy('grp_titulo')
-        ->get();
-
-        return Inertia::render('Posts/Index', [
-            'grupos' => $grupos,
-            'posts' => $posts,
-        ]);
+       return Inertia::render('Auth/Index');
+  
     }
 
     public function indexDoc()
@@ -46,13 +27,19 @@ class PostController extends Controller
 
     public function indexMenu()
     {        
-        return Inertia::render('MiMenu');
+        $user = Auth::user();
+
+        $sociedad = Sociedad::select( 'sdd_nombre', 'sdd_logo', 'sdd_estado')
+        ->where('id', $user->sociedad_id)
+        ->get();
+
+        return Inertia::render('MiMenu', [ 'sociedad' => $sociedad]);
     }
       
     public function indexPost()
     {
 
-      // Recupera post por orden desc a la fecha de creación
+      // Recupera post por orden desc a la fecha de creación 
             
         $posts = Post::where('posts.id','>',0) 
         ->join('grupos', 'posts.pos_grupo_id', '=', 'grupos.id')

@@ -6,7 +6,7 @@ import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ status, canResetPassword, laravelVersion, appVersion, phpVersion }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -81,6 +81,7 @@ export default function Login({ status, canResetPassword }) {
                 </div>
 
                 <div className="mt-4 flex items-center justify-end">
+                
                     <div style={{display: 'none' }}>
                     {canResetPassword && (
                         <Link
@@ -90,10 +91,14 @@ export default function Login({ status, canResetPassword }) {
                             Forgot your password?
                         </Link>
                     )}
-</div>
+                    </div>
                     <PrimaryButton className="bg-green-600 text-white px-4 py-1 rounded mb-4" disabled={processing}>
                         Log in
                     </PrimaryButton>
+                </div>
+                <div className="bg-green-200 text-green-800 px-4 py-1 text-sm text-center">
+                        Laravel: {laravelVersion} &nbsp;&nbsp; PHP: {phpVersion}&nbsp;&nbsp;APP: {appVersion}
+                       <span> Copyright &copy; 2025 &nbsp; aortizc</span>
                 </div>
             </form>
         </GuestLayout>

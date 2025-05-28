@@ -30,7 +30,7 @@ export default function Sociedad(props) {
         sdd_logo: sociedad.sdd_logo,
         sdd_observaciones: sociedad.sdd_observaciones,
         sdd_consecAjustes: sociedad.sdd_consecAjustes,
-        sdd_consecRcaja: sociedad.sdd_consecRcaja,
+        sdd_consecIngreso: sociedad.sdd_consecIngreso,
         sdd_consecEgreso: sociedad.sdd_consecEgreso,
         sdd_fchini: sociedad.sdd_fchini,
         sdd_estado: sociedad.sdd_estado,
@@ -150,8 +150,8 @@ export default function Sociedad(props) {
                         <MiInput  Id="sdd_consecAjustes" Type="text" Label="Consec Ajustes" OnChange={handleChange}
                          classNameI="" maxLength ="50" data ={data.sdd_consecAjustes} required={true}></MiInput>
 
-                        <MiInput  Id="sdd_consecRcaja" Type="text" Label="Consec RCaja" OnChange={handleChange}
-                         classNameI="" maxLength ="50" data ={data.sdd_consecRcaja} required={true}></MiInput>
+                        <MiInput  Id="sdd_consecIngreso" Type="text" Label="Consec Ingresos" OnChange={handleChange}
+                         classNameI="" maxLength ="50" data ={data.sdd_consecIngreso} required={true}></MiInput>
 
                         <MiInput  Id="sdd_consecEgreso" Type="text" Label="Consec Egresos" OnChange={handleChange}
                          classNameI="" maxLength ="50" data ={data.sdd_consecEgreso} required={true}></MiInput>

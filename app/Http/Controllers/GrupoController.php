@@ -41,7 +41,7 @@ class GrupoController extends Controller
         $grupoId = $sociosData[0];
         $socios = $sociosData[1];
 
-        // Crea lista de socios a agregar a gruposocios
+        // Crea lista de socios a agregar a gruposocios 
         foreach ($socios as $row){
             if (is_array($row)){
                 foreach($row as $socio){

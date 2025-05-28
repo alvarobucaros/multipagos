@@ -1,18 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
-import Modal from '@/Components/Modal';
 import { useRef, useState, React } from 'react';
 import { Head ,useForm, usePage, Link} from '@inertiajs/react';
-import Swal from 'sweetalert2';
-import Pagination from '@/Components//Pagination';
-import MiInput from '@/Components/MiInput';
-import MiLista from '@/Components/MiLista';
+
 
 export default function Grupo(props) {
     const user = usePage().props.auth.user;
-    const [modal,setModal] = useState(false);
-    const [title,setTitle] = useState('');
-    const [operation,setOperation] = useState(1);
+ 
 
     const [grupos, setGrupos] = useState(props.grupos);
 

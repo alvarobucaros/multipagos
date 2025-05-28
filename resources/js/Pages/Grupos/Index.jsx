@@ -22,7 +22,6 @@ export default function Grupo(props) {
         grp_detalle: '',
         grp_estado: 'A',
     });
- //      grp_sociedad_id,       grp_titulo,       grp_detalle,       grp_estado,
 
     const [role, setRole] = useState(user.role) 
     

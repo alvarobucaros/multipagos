@@ -24,16 +24,24 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
+    protected function redirectTo()
+        {
+            return '/mimenu'; // Cambia la ruta de redirección
+        }
     /**
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+
+   //     dd($request);
+
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended('/mimenu');
+      //  return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

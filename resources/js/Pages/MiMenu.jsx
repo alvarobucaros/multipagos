@@ -1,16 +1,23 @@
-import React from 'react';
-import { Head,usePage, Link } from '@inertiajs/react';
+
+import { useState, React } from 'react'
+import { Head, usePage,  Link } from '@inertiajs/react';
 import AuthenticatedLayoutMenu from '@/Layouts/AuthenticatedLayoutDoc';
 
 export default function MiMenu(props) {
     const user = usePage().props.auth.user;
 
+    const [sociedad, setSociedad] = useState(props.sociedad);
+
     return (
         <AuthenticatedLayoutMenu
             auth={props.auth}
+            sociedad={sociedad[0]}
         >
+             <Head title="Menú" />
             <div className="p-6">
+               
                 <div className='grid grid-cols-8 gap-4'>
+                    
                     <Link href="/grupo" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
                         <h3 className='text-center'>Grupos</h3>
                     </Link>

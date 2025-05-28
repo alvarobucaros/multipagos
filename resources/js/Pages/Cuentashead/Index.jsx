@@ -213,12 +213,12 @@
                         <td className='border border-gray-400 px-2 py-1'>{cuentahead.cxh_detalle}</td>
                         <td className='border border-gray-400 px-2 py-1'>{cuentahead.cxh_fchinicio}</td>
                         <td className='border border-gray-400 px-2 py-1'>{cuentahead.grp_titulo}</td>
-                        <td className='border border-gray-400 px-2 py-1'>{cuentahead.cxh_valor}</td>
-                        <td className='border border-gray-400 px-2 py-1'>{cuentahead.cxh_cuotas}</td>  
-                        <td className='border border-gray-400 px-2 py-1'>{cuentahead.cxh_nrocxc}</td>
-                        <td className='border border-gray-400 px-2 py-1'>{cuentahead.cxh_total}</td> 
-                        <td className='border border-gray-400 px-2 py-1'>{cuentahead.cxh_saldo}</td>
-                           
+                        <td className='border border-gray-400 px-2 py-1 text-right'>{parseFloat(cuentahead.cxh_valor).toLocaleString('es-CO')}</td>
+                        <td className='border border-gray-400 px-2 py-1 text-right'>{parseFloat(cuentahead.cxh_cuotas).toLocaleString('es-CO')}</td>  
+                        <td className='border border-gray-400 px-2 py-1 text-right'>{parseFloat(cuentahead.cxh_nrocxc).toLocaleString('es-CO')}</td>
+                        <td className='border border-gray-400 px-2 py-1 text-right'>{parseFloat(cuentahead.cxh_total).toLocaleString('es-CO')}</td> 
+                        <td className='border border-gray-400 px-2 py-1 text-right'>{parseFloat(cuentahead.cxh_saldo).toLocaleString('es-CO')}</td>
+                          
                         {role !== 'User' && (
                             <> 
                                 <td className='border border-gray-400 px-2 py-1'>
