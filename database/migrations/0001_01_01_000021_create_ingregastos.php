@@ -15,19 +15,19 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('iga_sociedad_id');
             $table->unsignedBigInteger('iga_socio_id');
-            $table->integer('iga_tipo');
+            $table->string('iga_tipo',1);
             $table->integer('iga_numero');
             $table->date('iga_Fecha');
             $table->integer('iga_concepto_id');
             $table->string('iga_detalle');
             $table->string('iga_Documento');
-            $table->string('iga_debito',12,2);
-            $table->string('iga_credito',12,2);
+            $table->decimal('iga_debito',12,0);
+            $table->decimal('iga_credito',12,0);
             $table->integer('iga_grupo');
             $table->string('iga_procesado',1);  
             $table->integer('iga_idUsuario');
-             $table->timestamps();
-             $table->foreign('iga_sociedad_id')
+            $table->timestamps();
+            $table->foreign('iga_sociedad_id')
                 ->references('id')
                 ->on('sociedades')
                 ->onDelete('cascade');

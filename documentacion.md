@@ -24,3 +24,7 @@ usuario appeinte_Cien1000
 password	appeinteCien1000
 
 tsohlacol~egnimota_etnieppa~0001neiC_etnieppa~0001neiCetnieppa~1
+
+jsPdf  Imprime en jsx
+
+https://medium.com/@aalam-info-solutions-llp/creating-dynamic-pdfs-with-jspdf-and-customizing-autotables-in-react-a846a6f3fdca

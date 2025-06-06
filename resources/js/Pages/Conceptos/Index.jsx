@@ -68,16 +68,15 @@ export default function Concepto(props) {
         { value: 'I', label: 'Ingreso' },
         { value: 'G', label: 'Gasto' },
         { value: 'A', label: 'Ajuste' },
-        { value: 'D', label: 'Deudas' },
-        { value: 'S', label: 'Saldo Inicial' },
+        { value: 'D', label: 'Deudas' },       
     ];
 
     const tipos = {
-        I: 'Iniciada',
+        I: 'Ingreso',
         G: 'Gasto',
         A: 'Ajuste',
         D: 'Deuda',
-        S: 'SaldoIni'
+        S: 'Saldo'
     };  
 
     const aplicaOptions = [
@@ -260,8 +259,8 @@ export default function Concepto(props) {
                             <th className='px-2 py-1'>VALOR DEUDA</th>
                             <th className='px-2 py-1'>CUOTAS</th>
                             <th className='px-2 py-1'>VLR CUOTA</th>
+                            <th className='px-2 py-1'>APLICA</th>                            
                             <th className='px-2 py-1'>GRUPO</th>
-                            <th className='px-2 py-1'>APLICA</th>
                             <th className='px-2 py-1'>ESTADO</th>
                             <th className='px-2 py-1' colSpan={2}></th>
                         </tr>
@@ -278,13 +277,14 @@ export default function Concepto(props) {
                                 <td className='border border-gray-400 px-2 py-1'>{concepto.con_descripcion}</td>
                                 <td className='border border-gray-400 px-2 py-1'>{concepto.con_fechaDesde}</td>
                                 <td className='border border-gray-400 px-2 py-1'>{concepto.con_fechaHasta}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{concepto.con_valorCobro}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{concepto.con_cuotas}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{concepto.con_valorCuota}</td>
-                                <td className='border border-gray-400 px-2 py-1'>{concepto.con_grupo}</td>
-                                <td className='border border-gray-400 px-2 py-1'>
+                                <td className='border border-gray-400 px-2 py-1 text-right'>{parseFloat(concepto.con_valorCobro).toLocaleString('es-CO')}</td>
+                                <td className='border border-gray-400 px-2 py-1 text-center'>{parseFloat(concepto.con_cuotas).toLocaleString('es-CO')}</td>
+                                <td className='border border-gray-400 px-2 py-1 text-right'>{parseFloat(concepto.con_valorCuota).toLocaleString('es-CO')}</td>
+                                     <td className='border border-gray-400 px-2 py-1'>
                                     {aplica[concepto.con_aplica] || 'Desconocido'}
                                 </td>
+                                <td className='border border-gray-400 px-2 py-1'>{concepto.grp_titulo}</td>
+
                                 <td className='border border-gray-400 px-2 py-1'>
                                     {estados[concepto.con_estado] || 'Desconocido'}
                                 </td>

@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anticipo;
+use App\Models\Abono;
 use App\Models\pagos;
 use App\Models\Socio;
+use App\Models\Sociedad;
 use App\Models\Cuenta;
 use App\Models\Concepto;
-
+use App\Models\Cuentahead;
+use App\Models\Ingregasto;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response; // Para respuestas HTTP 
 use Illuminate\Support\Facades\Auth;
@@ -33,14 +38,75 @@ class PagoController extends Controller
         $cuentas = null;
         $socioSeleccionado = null;
         $filters = ['socio_id' => null]; 
-        $saldo = [];
+        $saldo = [
+            'cxc_concepto_id'=>0, 
+            'pago'=>0, 
+            'id'=> 0,
+            'grupo' => 0,
+            'fecha' => null, 
+            'con_descripcion'=>'', 
+            'total_saldo'=>0
+        ];
 
         return Inertia::render('Pagos/Index', ['socios' => $socios, 'cuentas' => $cuentas, 
                 'filters' => $filters, 'socioSeleccionado' => $socioSeleccionado,
-                'saldo'=> $saldo]);                              
-                                
+                'saldo'=> $saldo]);                   
     }
 
+    public function infoPago($id){
+        $ar = explode("|",$id);
+        $idIg = $ar[0]; 
+        $tipoIg = $ar[1]; 
+        $nroIg = $ar[2]; 
+
+        $user = Auth::user();
+
+        $ingregasto = Ingregasto::where('id',$id)
+        ->first();
+
+        $id = $ingregasto->iga_socio_id;  // socio o tercero
+
+        $idcpt =  $ingregasto->iga_concepto_id; // Concepto
+
+    // "id" => 5
+    // "iga_sociedad_id" => 1
+    // "iga_socio_id" => 27
+    // "iga_tipo" => "G"
+    // "iga_numero" => 0
+    // "iga_Fecha" => "2025-06-03"
+    // "iga_concepto_id" => 8
+    // "iga_detalle" => "Pago del mes"
+    // "iga_Documento" => "0"
+    // "iga_debito" => "0"
+    // "iga_credito" => "15000"
+    // "iga_grupo" => 1
+    // "iga_procesado" => "N"
+    // "iga_idUsuario" => 1
+
+        $socios = socio::select('soc_nombre', 'soc_telefono', 'soc_email' ,'soc_tipodoc' ,'soc_nrodoc')
+        ->where('id', $id)
+        ->first();
+
+        $sociedad = Sociedad::select('sdd_nombre', 'sdd_email', 'sdd_telefono', 'sdd_tipodoc', 'sdd_nrodoc', 'sdd_logo')
+        ->where('id', $user->sociedad_id)
+        ->first();
+
+        $abonos = Abono::where('abo_socio_id', $id)
+        ->where('abo_sociedad_id', $user->sociedad_id)
+        ->join('conceptos', 'conceptos.id', '=', 'abonos.abo_concepto_id')
+        ->select('abo_concepto_id', 'con_descripcion', 'abo_fecha', 'abo_descripcion', 
+        'abo_saldo', 'abo_abono', 'abo_ingreso_id' )
+        ->orderBy('abo_concepto_id')
+        ->get(); 
+
+// dd($abonos);        
+// select   from abonos  
+
+// where abo_sociedad_id = 1 AND  = 5 AND abo_fecha = '2025-06-03';
+
+        return Inertia::render('Ingregastos/Informe', ['socios' => $socios,  'sociedad' => $sociedad,
+                               'ingregasto' => $ingregasto, 'abonos' => $abonos]);
+    }
 
     public function showCuales(Request $request, $id) // $id es el ID del socio
     {
@@ -53,6 +119,13 @@ class PagoController extends Controller
         // Obtener el socio seleccionado (para mostrar su nombre, por ejemplo)
         $socioSeleccionado = Socio::select('id', 'soc_nombre')->find($id);
 
+        $saldo = Cuenta::join('conceptos', 'conceptos.id', '=', 'cuentas.cxc_concepto_id')
+            ->where('cxc_socio_id', $id)
+            ->where('cxc_saldo', '>', 0)
+            ->groupBy('cxc_concepto_id', 'con_descripcion')
+            ->selectRaw('cxc_concepto_id, 0 as pago, 0 as id, 0 as grupo, null as fecha, con_descripcion, SUM(cxc_saldo) as total_saldo')
+            ->get();
+
         // Obtener las cuentas del socio
         $cuentas = Cuenta::where('cxc_socio_id', $id)
             ->where('cxc_saldo', '>', 0)
@@ -63,21 +136,14 @@ class PagoController extends Controller
                 'conceptos.con_descripcion',
                 'cxc_fecha',
                 'cxc_valor',
-                'cxc_saldo'
+                'cxc_saldo',
+                'cxc_concepto_id'
             )
-            ->orderBy('cxc_fecha')
             ->orderBy('con_titulo')
+            ->orderBy('cxc_fecha')           
             ->paginate(10)
             ->withQueryString(); // Importante para que la paginación funcione con partial reloads
 
-        // Obtener los saldos del socio por concepto
-        $saldo = Cuenta::join('conceptos', 'conceptos.id', '=', 'cuentas.cxc_concepto_id')
-            ->where('cxc_socio_id', $id)
-            ->where('cxc_saldo', '>', 0)
-            ->groupBy('cxc_concepto_id', 'con_descripcion')
-            ->selectRaw('cxc_concepto_id, con_descripcion, SUM(cxc_saldo) as total_saldo')
-            ->get();
- // dd($saldo);
         // Repoblar la vista con datos actualizados
         return Inertia::render('Pagos/Index', [ // Renderiza la MISMA página
             'socios' => $sociosList,
@@ -124,11 +190,178 @@ class PagoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, pagos $pagos)
+    public function update(Request $request, $id)
     {
-        //
+        $user = Auth::user();
+        // valores iniciales #content: "[{"cxc_concepto_id":4,"pago":"20000","id":0,"grupo":0,"fecha":null,"con_descripcion":"Internet Movistar","total_saldo":"50000.00"}]"
+        $id;                // id del socio
+        $vltAnticipo = 0;   // valor anticipo a procesar
+        $aplicado=0;        // Cuanto se aplica de los pagos
+        $abono = 0;         // abonos que se digita por cada concepto
+        $today = date("Y-m-d"); // hoy
+        $detalle='';        // detalle para el abono 
+        $sal2 = 0;         // lo que se paga en realidad por cada cuenta
+        $consecutivo = 0;
+
+        // Trae la empresa
+        $sociedad = Sociedad::select(  'sdd_consecIngreso',  'sdd_saldo')
+        ->where('id', $user->sociedad_id)
+        ->first();
+        $consecutivo = $sociedad->sdd_consecIngreso;
+
+        // Trae un anticipo si hay
+        $anticipo = Anticipo::where('ant_sociedad_id', $user->sociedad_id)
+        ->where('ant_socio_id', '=', $id)
+        ->where('ant_saldo', '>', 0)     
+        ->select('id', 'ant_saldo')
+        ->first();
+
+        // hay un anticipo
+        if ($anticipo) {
+            $vltAnticipo = $anticipo->ant_saldo;
+            $anticipo->ant_saldo = 0;
+            $anticipo->ant_estado = 'A';
+            $anticipo->fill($request->input())->saveOrFail();
+        }
+
+        $datos = $request->all();  // lo digitado por el usuario (concpto y valor pago)
+
+        $pago='';
+       
+        // recorre los pagos capturados por cada concepto
+        foreach ($datos as $item) {
+            if( $item['pago'] > 0){         // si hay abono para este concepto
+                $cuentas = Cuenta::where('cxc_socio_id', $id)       // trae las cuentas de este concepto por socio
+                ->where('cxc_saldo', '>', 0)
+                ->where('cxc_concepto_id', '=', $item['cxc_concepto_id'])
+                ->orderBy('cxc_fecha')
+                ->get();
+
+                $cuenta = $cuentas->all();
+
+                $abono =  $item['pago'] + $vltAnticipo;  // abono neto digitado + anticipo
+                $detalle='Abono por cuotas(s) ';
+                $sal2 = 0;
+                $aplicado=0;
+ //   dd($cuenta);
+                // Recorre cada cuenta por cada concepro
+                foreach ($cuenta as $cta) {
+                    $cxcid = $cta->id;
+                    $temp = Cuenta::find($cxcid);
+                    if ($abono > 0)
+                    {
+                        $pago = 0;
+                        $cxc_saldo = $temp->cxc_saldo;           // guarda el saldo pora el informe de abonos
+                        $detalle='Abono cuotas del ' . $cta->cxc_fecha .' - ';
+                        $vlr = $cta->cxc_saldo - $abono;        // aplica el abono
+                        if ($vlr >= 0 )
+                        {                        // No queda abono y Queda un saldo pora pagar
+                            $sal2 = $abono;
+                            $temp->cxc_saldo = $vlr;
+                            $aplicado += $sal2;
+                            $abono = 0;
+                            $pago = $vlr;
+                        }else
+                        {
+                            $sal2 = $temp->cxc_saldo;
+                            $aplicado += $sal2;      // Queda abono para otra cuenta
+                            $temp->cxc_saldo = 0;
+                            $abono = $vlr * (-1);
+                            $pago = $cta->cxc_saldo;
+                        }
+                        // actualiza la cuenta
+                        $temp->fill($request->input())->saveOrFail();
+
+                        // Trae el concepto y extrae el grupo
+                        $cpto = Concepto::select('con_grupo')
+                        ->where('id', $item['cxc_concepto_id'])
+                        ->first();
+                        $grupo = $cpto->con_grupo;
+
+                        // Trae el heder de la cuenta y ajusta el saldo pagado
+                        $temp = Cuentahead::where('id', $cta['cxc_head_id'])
+                                ->first();
+                        $temp->cxh_saldo -=  $sal2;   
+                        $temp->fill($request->input())->saveOrFail();
+
+                        // Crea un registro de abono pagado
+                        $tmp = Abono::updateOrCreate(
+                        ['abo_sociedad_id' => $user->sociedad_id, 
+                        'abo_socio_id' => $id,
+                        'abo_concepto_id' => $item['cxc_concepto_id'],
+                        'abo_fecha' => $today,
+                        'abo_descripcion' => $detalle,
+                        'abo_saldo' => $cxc_saldo, 
+                        'abo_abono' => $sal2,
+                        'abo_ingreso_id' => 0]
+                        );
+                    } 
+
+                }
+                $this->creaIngregast( $id, $today, $detalle, $item['cxc_concepto_id'], $grupo, $aplicado);
+             
+                $sociedad = Sociedad::select(  'sdd_consecIngreso',  'sdd_saldo')
+                ->where('id', $user->sociedad_id)
+                ->first();
+                $sociedad->sdd_consecIngreso = $consecutivo;
+                $sociedad->sdd_saldo += $aplicado;
+                $temp->fill($request->input())->saveOrFail();
+            }
+
+            //  Queda un anticipo por grabar  '',  ''
+            if ($abono > 0){      
+                $detalle = 'Anticipo por abonos en cuenta ' .  $today;          
+                $tmp = Anticipo::updateOrCreate(
+                ['ant_sociedad_id' => $user->sociedad_id, 
+                'ant_socio_id' => $id,
+                'ant_fecha' => $today,
+                'ant_detalle' => $detalle,
+                'ant_valor' => $abono, 
+                'ant_saldo' => $abono,
+                'ant_estado' => 'I']
+                );
+                $this->creaIngregast( $id, $today, $detalle, $item['cxc_concepto_id'], $cta->cxc_grupo_id,$abono);
+            }
+        }
+        return;
     }
 
+        public function creaIngregast( $id, $today, $detalle, $concepto, $grupo, $aplicado )
+    {
+        $user = Auth::user();
+        // Trae la empresa
+        $sociedad = Sociedad::select(  'sdd_consecIngreso',  'sdd_saldo')
+        ->where('id', $user->sociedad_id)
+        ->first();
+        $consecutivo = $sociedad->sdd_consecIngreso;
+        $saldo = $sociedad->sdd_saldo + $aplicado;
+        // Crea un registro de Ingresos y gastos
+        $consecutivo += 1;
+        $tmp = Ingregasto::updateOrCreate(
+        ['iga_sociedad_id' => $user->sociedad_id, 
+        'iga_socio_id' => $id,
+        'iga_tipo' => 'I',
+        'iga_numero' => $consecutivo,
+        'iga_Fecha' => $today,
+        'iga_concepto_id' => $concepto,
+        'iga_detalle' =>  $detalle . ' ' . $today, 
+        'iga_Documento'=> '0',
+        'iga_credito' => 0,
+        'iga_grupo' => $grupo,
+        'iga_procesado' => 'N',                  
+        'iga_debito' => $aplicado,
+        'iga_idUsuario' => $user->sociedad_id]
+        );
+
+        $idCreado = $tmp->id; 
+
+        Sociedad::where('id', $user->sociedad_id)
+       ->update(['sdd_consecIngreso' => $consecutivo, 'sdd_saldo' => $saldo]);
+    
+        Abono::where('abo_ingreso_id',0)
+        ->where('abo_socio_id', $id)
+       ->update(['abo_ingreso_id' => $idCreado]);
+    }
     /**
      * Remove the specified resource from storage.
      */

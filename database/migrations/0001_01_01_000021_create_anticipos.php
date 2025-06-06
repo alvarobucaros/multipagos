@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('ant_socio_id');
             $table->date('ant_fecha');
             $table->string('ant_detalle',200);
-            $table->decimal('ant_valor',12,2);
-            $table->decimal('ant_saldo',12,2);
+            $table->decimal('ant_valor',12,0);
+            $table->decimal('ant_saldo',12,0);
             $table->string('ant_estado', 1);
             $table->timestamps();
 

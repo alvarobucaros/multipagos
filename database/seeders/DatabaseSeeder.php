@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'sdd_consecAjustes' => '0',
             'sdd_consecIngreso' => '0',
             'sdd_consecEgreso' => '0',
-            'sdd_fchini'  => '01-01-2025',
+            'sdd_fchini'  => '2025-01-01',
             'sdd_estado' => 'A',
             'sdd_saldo' => '0',   
          ]);

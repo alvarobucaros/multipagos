@@ -18,11 +18,16 @@ class ConceptoController extends Controller
     {
        
         $user = Auth::user();
+
         if (!$user || !$user->sociedad_id) {           
             return Inertia::render('Conceptos/Index', ['conceptos' => []]);
         }
          
         $conceptos = Concepto::where('con_sociedad_id', $user->sociedad_id)
+        ->join('grupos', 'grupos.id', '=', 'conceptos.con_grupo')
+        ->select('conceptos.id','con_sociedad_id','con_tipo','con_titulo','con_descripcion','con_fechaDesde',
+                'con_fechaHasta','con_valorCobro','con_cuotas','con_valorCuota','con_grupo','grp_titulo',
+                'con_aplica','con_estado')
         ->orderBy('con_tipo')
         ->orderBy('con_titulo')
         ->paginate(10);

@@ -54,19 +54,19 @@ class IngregastoController extends Controller
       'conceptos' => $conceptos, 'socios' => $socios, 'sociedad' => $sociedad]);
     }
 
-public function tipoBaseDatos()
-{
-    $tipoDB = DB::connection()->getDriverName();
-    
-    return response()->json(['tipo_base_datos' => $tipoDB]);
+    public function tipoBaseDatos()
+    {
+        $tipoDB = DB::connection()->getDriverName();
+        
+        return response()->json(['tipo_base_datos' => $tipoDB]);
 
-    $versionLaravel = app()->version();
-    dd($versionLaravel);
+        $versionLaravel = app()->version();
+        dd($versionLaravel);
 
-    $versionPHP = phpversion();
-    dd($versionPHP);
+        $versionPHP = phpversion();
+        dd($versionPHP);
 
-}
+    }
 
 
     /**
@@ -102,19 +102,20 @@ public function tipoBaseDatos()
      */
     public function store(Request $request)
     {
-       $validatedData = $this->validate($request);
+        $validatedData = $this->validate($request);  // valida
 
-        $this->updateSociedad($request);
-       
         try {
             Ingregasto::create($validatedData);
-            return redirect()->back()->with('success', 'Ingregasto creado exitosamente.');
+            $this->updateSociedad($request);   // actualiza saldo en la Sociedad
+            return redirect()->back()->with('success', 'Anticipo creado exitosamente.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Hubo un problema al crear el Ingregasto.');
+            dd('Eror Creación :' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
 
-    private function updateSociedad(Request $request)
+
+  private function updateSociedad(Request $request)
    {
    // dd( $request->all());
         $dato = $request->all();
@@ -133,7 +134,6 @@ public function tipoBaseDatos()
         }
        
          $sociedad->fill($request->input())->saveOrFail();
-        
    } 
 
   

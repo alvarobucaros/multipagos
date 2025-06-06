@@ -27,7 +27,7 @@ Route::get('/', function () {
     ]);
 });
 
-//Route::get('/', [PostController::class, 'indexPost'])->name('/');
+//Route::get('/' , [PostController::class, 'indexPost'])->name('/');
 
 Route::get('/dashboard', [PostController::class, 'indexPost'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/mimenu', [PostController::class, 'indexMenu'])->name('menu');
@@ -74,10 +74,11 @@ Route::post('/ingregasto', [IngregastoController::class, 'store'])->name('ingreg
 Route::put('/ingregasto/{id}', [IngregastoController::class, 'update'])->name('ingregasto.update');
 Route::delete('/ingregasto/{id}', [IngregastoController::class, 'destroy'])->name('ingregasto.destroy');
 
+Route::get('/infoPago/{id}', [PagoController::class, 'infoPago'])->name('infoPago');
 Route::get('/pago', [PagoController::class, 'index'])->name('pago');
 Route::get('/pago/{id}', [PagoController::class, 'show'])->name('pago.show');
 Route::post('/pago', [PagoController::class, 'store'])->name('pago.store');
-Route::put('/pago/{id}', [PagoController::class, 'update'])->name('pago.update');
+Route::put('/pagoSaldo/{id}', [PagoController::class, 'update'])->name('pago.update');
 Route::delete('/pago/{id}', [PagoController::class, 'destroy'])->name('pago.destroy');
 Route::post('/pagoCual/{id}', [PagoController::class, 'showCuales'])->name('pago.showCuales');
 Route::get('/pagoSocio/{id}', [PagoController::class, 'showPagos'])->name('pago.showPagos');

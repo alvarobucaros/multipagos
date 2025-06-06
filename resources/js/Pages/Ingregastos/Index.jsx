@@ -75,9 +75,8 @@ export default function Ingregasto(props) {
         I: 'Ingresos',
         G: 'Gasto',
         A: 'Ajuste',
-        A: 'Saldo parcial',
+        S: 'Saldo parcial',
     };
-
 
     const save = (e) =>{
         e.preventDefault();
@@ -105,7 +104,33 @@ export default function Ingregasto(props) {
             alert('Error en la validación de datos');
         }
     }
+
+    const imprimir = (id, tipo, numero) => {
+        if(tipo !== 'A'){
+            alert ('imprime ' + id + ' '+ numero + ' ' + tipo);
+            id=id + '|'+ numero + '|' + tipo
+            const response = Inertia.get(`/infoPago/`+id);
+            }
+            else{
+                alert('Los ajustes no se imprimen')
+            }
+        }
     
+    const imprimir2 = () => {
+        if( selectedSocioId !== ""){
+            const response = Inertia.get(`/infoPago/${selectedSocioId}`);
+        }
+            else{
+            alert('Seleccione un socio')
+        }
+    }
+
+
+
+
+
+
+
     const eliminar = (id, tipo, numero, concepto, procesado) =>{
         var tipoAux = tipoIga[tipo]
        if(procesado === 'S'){
@@ -206,14 +231,14 @@ export default function Ingregasto(props) {
                     > Recálculo de saldo
                 </button> 
                 <div className="bg-white grid v-screen place-items-center py-1">
-                    <table className="w-full border-collapse border border-gray-300">
+                    <table className="w-full border-collapse border border-gray-300 text-xs">
                         <thead>
                             <tr className='bg-gray-100'>
                                 <th className='px-2 py-1'>#</th>
                                 <th className='px-2 py-1'>TIPO</th>
                                 <th className='px-2 py-1'>NRO</th>
                                 <th className='px-2 py-1'>FECHA</th>
-                                 <th className='px-2 py-1'>NR DOC</th>
+                                <th className='px-2 py-1'>NR DOC</th>
                                 <th className='px-2 py-1'>TERCERO</th>
                                 <th className='px-2 py-1'>CONCEPTO</th>                               
                                 <th className='px-2 py-1'>DETALLE</th>
@@ -243,13 +268,19 @@ export default function Ingregasto(props) {
                                                 <> {/* <-- Fragmento  para agrupar los td */}
                                             <td className='border border-gray-400 px-2 py-1'>
                                                 <button
-                                                className="bg-yellow-500 text-white px-2 py-1 rounded"
+                                                className="bg-yellow-500 hover:bg-orange-500 text-white px-2 py-1 rounded"
                                                 onClick={() => {
                                                     setData(ingregasto); // Precarga los datos en el formulario
                                                     setTimeout(() => openModal(0), 0);                                         
                                                 }}
                                                 >
                                                 Editar
+                                                </button>
+                                            </td>
+                                            <td className='border border-gray-400 px-2 py-1'>
+                                                <button className='bg-cyan-500 hover:bg-blue-500 text-white font-bold py-1 px-1 rounded'
+                                                onClick={() => imprimir(ingregasto.id,ingregasto.iga_tipo, ingregasto.iga_numero)}>   
+                                                Imprimir
                                                 </button>
                                             </td>
                                             <td className='border border-gray-400 px-2 py-1'>

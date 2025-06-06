@@ -41,12 +41,6 @@ class CuentasheadController extends Controller
         ->orderBy('con_descripcion')
         ->get();
 
-        // $grupos = Grupo::where('grp_sociedad_id', $user->sociedad_id)
-        // ->where('grp_estado', 'A')
-        // ->select('id', 'grp_titulo as opcion')
-        // ->orderBy('grp_titulo')
-        // ->get();
- 
         return Inertia::render('Cuentashead/Index', 
         ['cuentashead' => $cuentashead, 'conceptos' => $conceptos]
         );
@@ -87,12 +81,6 @@ class CuentasheadController extends Controller
         if (!$concepto) {
             return redirect()->back()->with('error', 'Concepto no encontrado.');
         }
-
-        // $request->merge([ ]);
-        //     'cxh_valor' => $concepto->con_valorCobro,
-        //     'cxh_cuotas' => $concepto->con_cuotas,
-        //     'cxh_grupo' => $concepto->con_grupo,
-        // ]);
 
         $request['cxh_valor'] = $concepto->con_valorCobro;
         $request['cxh_cuotas'] = $concepto->con_cuotas;
