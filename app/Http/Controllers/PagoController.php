@@ -56,8 +56,8 @@ class PagoController extends Controller
     public function infoPago($id){
         $ar = explode("|",$id);
         $idIg = $ar[0]; 
-        $tipoIg = $ar[1]; 
-        $nroIg = $ar[2]; 
+        $nroIg = $ar[1]; 
+        $tipoIg = $ar[2]; 
 
         $user = Auth::user();
 
@@ -68,44 +68,37 @@ class PagoController extends Controller
 
         $idcpt =  $ingregasto->iga_concepto_id; // Concepto
 
-    // "id" => 5
-    // "iga_sociedad_id" => 1
-    // "iga_socio_id" => 27
-    // "iga_tipo" => "G"
-    // "iga_numero" => 0
-    // "iga_Fecha" => "2025-06-03"
-    // "iga_concepto_id" => 8
-    // "iga_detalle" => "Pago del mes"
-    // "iga_Documento" => "0"
-    // "iga_debito" => "0"
-    // "iga_credito" => "15000"
-    // "iga_grupo" => 1
-    // "iga_procesado" => "N"
-    // "iga_idUsuario" => 1
-
+        // trae el socio indicado
         $socios = socio::select('soc_nombre', 'soc_telefono', 'soc_email' ,'soc_tipodoc' ,'soc_nrodoc')
         ->where('id', $id)
         ->first();
 
-        $sociedad = Sociedad::select('sdd_nombre', 'sdd_email', 'sdd_telefono', 'sdd_tipodoc', 'sdd_nrodoc', 'sdd_logo')
+        // trae información de la sociedad 
+        $sociedad = Sociedad::select('sdd_nombre', 'sdd_email', 'sdd_telefono', 'sdd_tipodoc', 
+        'sdd_nrodoc', 'sdd_logo', 'sdd_administra')
         ->where('id', $user->sociedad_id)
         ->first();
 
+        // trae los abonos que tiene el socio
         $abonos = Abono::where('abo_socio_id', $id)
         ->where('abo_sociedad_id', $user->sociedad_id)
+        ->where('abo_ingreso_id', $nroIg)
         ->join('conceptos', 'conceptos.id', '=', 'abonos.abo_concepto_id')
         ->select('abo_concepto_id', 'con_descripcion', 'abo_fecha', 'abo_descripcion', 
         'abo_saldo', 'abo_abono', 'abo_ingreso_id' )
         ->orderBy('abo_concepto_id')
         ->get(); 
 
-// dd($abonos);        
-// select   from abonos  
-
-// where abo_sociedad_id = 1 AND  = 5 AND abo_fecha = '2025-06-03';
-
+        //  Trae los anticipos que tenga el socio
+        $anticipos = Anticipo::where('ant_socio_id', $id)
+        ->where('ant_ingreso', $nroIg )
+        ->where('ant_saldo','>',0)
+        ->select('ant_fecha', 'ant_detalle', 'ant_valor')
+        ->get();
+       
+        // llama al informe para mostrar la información
         return Inertia::render('Ingregastos/Informe', ['socios' => $socios,  'sociedad' => $sociedad,
-                               'ingregasto' => $ingregasto, 'abonos' => $abonos]);
+                               'ingregasto' => $ingregasto, 'abonos' => $abonos, 'anticipos' => $anticipos ]);
     }
 
     public function showCuales(Request $request, $id) // $id es el ID del socio
@@ -154,53 +147,20 @@ class PagoController extends Controller
         ]);
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(pagos $pagos)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(pagos $pagos)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        // valores iniciales #content: "[{"cxc_concepto_id":4,"pago":"20000","id":0,"grupo":0,"fecha":null,"con_descripcion":"Internet Movistar","total_saldo":"50000.00"}]"
-        $id;                // id del socio
-        $vltAnticipo = 0;   // valor anticipo a procesar
-        $aplicado=0;        // Cuanto se aplica de los pagos
-        $abono = 0;         // abonos que se digita por cada concepto
+      
+        $id;                    // id del socio
+        $vltAnticipo = 0;       // valor anticipo a procesar
+        $aplicado=0;            // Cuanto se aplica de los pagos
+        $abono = 0;             // abonos que se digita por cada concepto
         $today = date("Y-m-d"); // hoy
-        $detalle='';        // detalle para el abono 
-        $sal2 = 0;         // lo que se paga en realidad por cada cuenta
+        $detalle='';            // detalle para el abono 
+        $sal2 = 0;              // lo que se paga en realidad por cada cuenta
         $consecutivo = 0;
 
         // Trae la empresa
@@ -243,6 +203,7 @@ class PagoController extends Controller
                 $detalle='Abono por cuotas(s) ';
                 $sal2 = 0;
                 $aplicado=0;
+                $ctrlIngreso = true;
  //   dd($cuenta);
                 // Recorre cada cuenta por cada concepro
                 foreach ($cuenta as $cta) {
@@ -289,7 +250,7 @@ class PagoController extends Controller
                         ['abo_sociedad_id' => $user->sociedad_id, 
                         'abo_socio_id' => $id,
                         'abo_concepto_id' => $item['cxc_concepto_id'],
-                        'abo_fecha' => $today,
+                        'abo_fecha' =>  $cta->cxc_fecha ,
                         'abo_descripcion' => $detalle,
                         'abo_saldo' => $cxc_saldo, 
                         'abo_abono' => $sal2,
@@ -298,7 +259,7 @@ class PagoController extends Controller
                     } 
 
                 }
-                $this->creaIngregast( $id, $today, $detalle, $item['cxc_concepto_id'], $grupo, $aplicado);
+                $this->creaIngregast( $id, $today, $detalle, $item['cxc_concepto_id'], $grupo, $aplicado, true);
              
                 $sociedad = Sociedad::select(  'sdd_consecIngreso',  'sdd_saldo')
                 ->where('id', $user->sociedad_id)
@@ -310,6 +271,7 @@ class PagoController extends Controller
 
             //  Queda un anticipo por grabar  '',  ''
             if ($abono > 0){      
+                $ctrlIngreso = false;
                 $detalle = 'Anticipo por abonos en cuenta ' .  $today;          
                 $tmp = Anticipo::updateOrCreate(
                 ['ant_sociedad_id' => $user->sociedad_id, 
@@ -318,15 +280,16 @@ class PagoController extends Controller
                 'ant_detalle' => $detalle,
                 'ant_valor' => $abono, 
                 'ant_saldo' => $abono,
+                'ant_ingreso' => 0,
                 'ant_estado' => 'I']
                 );
-                $this->creaIngregast( $id, $today, $detalle, $item['cxc_concepto_id'], $cta->cxc_grupo_id,$abono);
+                $this->creaIngregast( $id, $today, $detalle, $item['cxc_concepto_id'], $cta->cxc_grupo_id,$abono, false);
             }
         }
         return;
     }
 
-        public function creaIngregast( $id, $today, $detalle, $concepto, $grupo, $aplicado )
+        public function creaIngregast( $id, $today, $detalle, $concepto, $grupo, $aplicado, $consec )
     {
         $user = Auth::user();
         // Trae la empresa
@@ -336,7 +299,9 @@ class PagoController extends Controller
         $consecutivo = $sociedad->sdd_consecIngreso;
         $saldo = $sociedad->sdd_saldo + $aplicado;
         // Crea un registro de Ingresos y gastos
-        $consecutivo += 1;
+        if($consec){
+            $consecutivo += 1;
+        }
         $tmp = Ingregasto::updateOrCreate(
         ['iga_sociedad_id' => $user->sociedad_id, 
         'iga_socio_id' => $id,
@@ -360,7 +325,11 @@ class PagoController extends Controller
     
         Abono::where('abo_ingreso_id',0)
         ->where('abo_socio_id', $id)
-       ->update(['abo_ingreso_id' => $idCreado]);
+       ->update(['abo_ingreso_id' => $consecutivo]);
+
+        Anticipo::where('ant_ingreso',0)
+        ->where('ant_socio_id', $id)
+       ->update(['ant_ingreso' => $consecutivo]);
     }
     /**
      * Remove the specified resource from storage.

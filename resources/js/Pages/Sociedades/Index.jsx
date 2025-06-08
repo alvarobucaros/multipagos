@@ -28,7 +28,7 @@ export default function Sociedad(props) {
         sdd_telefono: sociedad.sdd_telefono,                         
         sdd_email: sociedad.sdd_email,                         
         sdd_logo: sociedad.sdd_logo,
-        sdd_observaciones: sociedad.sdd_observaciones,
+        sdd_administra: sociedad.sdd_administra,
         sdd_consecAjustes: sociedad.sdd_consecAjustes,
         sdd_consecIngreso: sociedad.sdd_consecIngreso,
         sdd_consecEgreso: sociedad.sdd_consecEgreso,
@@ -143,8 +143,8 @@ export default function Sociedad(props) {
 
                          <img src={`/logos/$data.sdd_logo}`} alt="Logo Empresa" className="w-30 h-30" />
                   
-                        <MiTextArea  Id="sdd_observaciones"  Label="Nombre sociedad" OnChange={handleChange} Rows="2" Cols="50"
-                         className="md:col-span-2" maxLength ="100" data ={data.sdd_observaciones} required={true}></MiTextArea>
+                        <MiTextArea  Id="sdd_administra"  Label="Nombre sociedad" OnChange={handleChange} Rows="2" Cols="50"
+                         className="md:col-span-2" maxLength ="100" data ={data.sdd_administra} required={true}></MiTextArea>
                        
 
                         <MiInput  Id="sdd_consecAjustes" Type="text" Label="Consec Ajustes" OnChange={handleChange}

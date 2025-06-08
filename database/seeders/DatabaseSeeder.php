@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             'sdd_telefono' => '601 357 22 22',
             'sdd_email' => 'test@com.co',
             'sdd_logo' => 'logo.png',
-            'sdd_observaciones' => 'Esta es una empresa de pruebas',       
+            'sdd_administra' => 'Administrador App',       
             'sdd_consecAjustes' => '0',
             'sdd_consecIngreso' => '0',
             'sdd_consecEgreso' => '0',

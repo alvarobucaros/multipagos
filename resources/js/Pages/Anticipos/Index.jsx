@@ -26,7 +26,8 @@ export default function anticipo(props) {
         ant_detalle: '',
         ant_valor: '',
         ant_saldo: '', 
-        ant_estado:'I'  
+        ant_estado:'I', 
+        ant_ingreso:999999 
     });
  
     const [isVisible, setIsVisible] = useState(false);
@@ -44,7 +45,8 @@ export default function anticipo(props) {
                 ant_detalle:'',
                 ant_valor:'',    
                 ant_saldo:'', 
-                ant_estado:'I'  
+                ant_estado:'I',
+                ant_ingreso:999999  
             });
         }
         else{
@@ -61,6 +63,7 @@ export default function anticipo(props) {
         e.preventDefault();
         if(validate()){
         data.ant_saldo = data.ant_valor;
+        data.ant_ingreso = 999999;
         if(operation === 1){  
             try {
                 const response = Inertia.post(`/anticipo`, data);
@@ -80,9 +83,9 @@ export default function anticipo(props) {
             }
             setModal(false);
         }
-    }else{
-        alert('Error en la validación de datos');
-    }
+        }else{
+            alert('Error en la validación de datos');
+        }
     }
            
     const eliminar = (id, socio, ant_fecha, estado) =>{
@@ -111,7 +114,6 @@ export default function anticipo(props) {
         }
     }
     
-
     
     const aplicar = (id, soc_nombre, ant_fecha, estado) =>{
         if (estado === 'I'){
@@ -207,7 +209,7 @@ export default function anticipo(props) {
                               <th className='px-2 py-1'>VALOR</th>
                               <th className='px-2 py-1'>SALDO</th>
                               <th className='px-2 py-1'>ESTADO</th>
-                              <th className='px-2 py-1' colSpan={2}></th>
+                              <th className='px-2 py-1' colSpan={2}>COMANDOS</th>
                           </tr>
                       </thead>
 
@@ -237,14 +239,14 @@ export default function anticipo(props) {
                                 Editar 
                                 </button>
                             </td>
-                            <td className='border border-gray-400 px-2 py-1'>
+                            {/* <td className='border border-gray-400 px-2 py-1'>
                                 <button
                                 className="bg-green-500 text-white px-2 py-1 rounded"
                                 onClick={() => aplicar(anticipo.id,anticipo.soc_nombre, anticipo.ant_fecha, anticipo.ant_estado)}>
                                 
                                 Aplicar
                                 </button>
-                            </td>
+                            </td> */}
                             <td className='border border-gray-400 px-2 py-1'>
                                 <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded'
                                 onClick={() => eliminar(anticipo.id,anticipo.soc_nombre,

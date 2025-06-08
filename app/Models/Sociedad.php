@@ -55,7 +55,7 @@ class Sociedad extends Model
         'sdd_nrodoc',
         'sdd_telefono',
         'sdd_email',
-        'sdd_observaciones',
+        'sdd_administra',
         'sdd_logo',
         'sdd_consecAjustes',
         'sdd_consecIngreso',

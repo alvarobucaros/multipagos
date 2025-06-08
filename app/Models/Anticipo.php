@@ -20,6 +20,7 @@ class Anticipo extends Model
         'ant_valor',
         'ant_saldo',
         'ant_estado',
+        'ant_ingreso',
     ];
 
 }

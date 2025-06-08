@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('ant_valor',12,0);
             $table->decimal('ant_saldo',12,0);
             $table->string('ant_estado', 1);
+            $table->integer('ant_ingreso', 1);
             $table->timestamps();
 
             $table->foreign('ant_sociedad_id')

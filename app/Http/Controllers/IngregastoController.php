@@ -26,8 +26,8 @@ class IngregastoController extends Controller
         $ingregastos = Ingregasto::where('iga_sociedad_id', $user->sociedad_id)
         ->join('socios', 'socios.id', '=', 'ingregastos.iga_socio_id')
         ->join('conceptos', 'conceptos.id', '=', 'ingregastos.iga_concepto_id')
-        ->orderBy('iga_Fecha', 'desc' )
-        ->orderBy('iga_tipo')
+        ->orderBy('iga_tipo', 'desc')
+        ->orderBy('iga_numero', 'desc' )
         ->select('ingregastos.id', 'iga_sociedad_id', 'iga_socio_id', 'iga_tipo', 'iga_numero', 
         'iga_Fecha', 'iga_concepto_id', 'iga_detalle', 'iga_Documento', 'iga_debito', 'iga_credito', 
         'iga_grupo', 'iga_procesado', 'iga_idUsuario','soc_nombre','con_descripcion')
@@ -66,15 +66,6 @@ class IngregastoController extends Controller
         $versionPHP = phpversion();
         dd($versionPHP);
 
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     private function validate($request)

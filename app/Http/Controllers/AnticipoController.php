@@ -52,7 +52,8 @@ class AnticipoController extends Controller
             'ant_detalle' => 'required|max:200',
             'ant_sociedad_id' => 'required|exists:sociedades,id',
             'ant_socio_id' => 'required|exists:socios,id',  
-            'ant_estado' => 'required',      
+            'ant_estado' => 'required',   
+            'ant_ingreso' => 'required',      
         ]);
     }
 

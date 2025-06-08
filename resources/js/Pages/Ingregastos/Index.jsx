@@ -107,7 +107,6 @@ export default function Ingregasto(props) {
 
     const imprimir = (id, tipo, numero) => {
         if(tipo !== 'A'){
-            alert ('imprime ' + id + ' '+ numero + ' ' + tipo);
             id=id + '|'+ numero + '|' + tipo
             const response = Inertia.get(`/infoPago/`+id);
             }

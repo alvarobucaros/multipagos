@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('sdd_nrodoc', 20);
             $table->string('sdd_telefono', 20);
             $table->string('sdd_email', 100);
-            $table->string('sdd_observaciones')->nullable();
+            $table->string('sdd_administra')->nullable();
             $table->string('sdd_logo', 100);
             $table->decimal('sdd_consecAjustes',12,2);
             $table->decimal('sdd_consecIngreso',12,2);
