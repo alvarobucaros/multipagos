@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cuentahead;
 use App\Models\Concepto;
+use App\Models\Cuenta;
 use App\Models\Grupo;
 use App\Models\Gruposocio;
 use App\Models\Socio;
@@ -87,7 +88,7 @@ class CuentasheadController extends Controller
         $request['cxh_grupo'] = $concepto->con_grupo;
 
 //         $validatedData = $this->validate($request);
-// dd($validatedData->all());
+//  dd($validatedData->all());
         try {
             Cuentahead::create($request->all());
             return redirect()->back()->with('success', 'Anticipo creado exitosamente.');
@@ -97,7 +98,7 @@ class CuentasheadController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource. 
      */
     public function updateDis(string $id)
     {
@@ -105,10 +106,13 @@ class CuentasheadController extends Controller
         $nro = 0;
         $total = 0;
         $valorCuota = 0;
-        $veces =  $cuentashead->cxh_cuotas;
+        $veces =  $cuentashead->cxh_cuotas;  // Número de cuotas segun el concepto 
+        if ($veces <= 0) {
+            return redirect()->back()->with('error', 'El número de cuotas debe ser mayor que cero.');
+        }
         $fecha = $cuentashead->cxh_fchinicio;
-        $grupo = $cuentashead->cxh_grupo;
-        $concepto = $cuentashead->cxh_concepto_id;
+        $grupo = $cuentashead->cxh_grupo;  // Grupo al que pertenece la cuenta
+        $concepto = $cuentashead->cxh_concepto_id; // Concepto de la 
         $id = $cuentashead->id;
 
         if ($cuentashead->cxh_cuotas > 0) {
@@ -120,13 +124,15 @@ class CuentasheadController extends Controller
             ->select('id');
         }else{
             $socios = Gruposocio::where('gsc_grupo_id', $grupo)
-            ->select('id');;
+            ->select('gsc_socio_id as id');;
         }
-   
+
         foreach ($socios->get() as $row){
+                      
+
             $fecha = $cuentashead->cxh_fchinicio;
-            for ($i = 0; $i < $veces; $i++) {                    
-                DB::table('cuentas')->insert([
+            for ($i = 0; $i < $veces; $i++) {   
+                $cuenta = [
                     'cxc_head_id' => $id,
                     'cxc_socio_id' => $row->id,
                     'cxc_concepto_id' => $concepto,
@@ -134,7 +140,12 @@ class CuentasheadController extends Controller
                     'cxc_fecha' => $fecha,
                     'cxc_valor' => $valorCuota,
                     'cxc_saldo' => $valorCuota,
-                ]);
+                ];
+                $cxc = new Cuenta($cuenta);
+ //             dd($cuenta);
+
+                $cxc->save();
+
                 $nro++;
                 $total += $valorCuota;
                 $fecha = date('Y-m-d', strtotime($fecha. ' +1 month'));
@@ -149,9 +160,7 @@ class CuentasheadController extends Controller
         return redirect()->back()->with('success', 'cuentashead actualizado correctamente');
     }
 
-            // 'cxh_nrocxc' => 'required',      
-            // 'cxh_total' => 'required',      
-            // 'cxh_saldo' => 'required',
+    
     /**
      * Update the specified resource in storage.
      */
@@ -178,3 +187,4 @@ class CuentasheadController extends Controller
         
     }
 }
+

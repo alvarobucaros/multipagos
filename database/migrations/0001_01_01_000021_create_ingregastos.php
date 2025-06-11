@@ -25,6 +25,7 @@ return new class extends Migration
             $table->decimal('iga_credito',12,0);
             $table->integer('iga_grupo');
             $table->string('iga_procesado',1);  
+            $table->string('iga_anticipo',1);  
             $table->integer('iga_idUsuario');
             $table->timestamps();
             $table->foreign('iga_sociedad_id')

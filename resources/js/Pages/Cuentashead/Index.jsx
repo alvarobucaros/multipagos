@@ -111,7 +111,7 @@
                 });
             }
         });
-
+ 
     }
 
     const distribuir = (id, fecha, detalle, valor) =>{

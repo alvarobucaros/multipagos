@@ -30,7 +30,7 @@ class IngregastoController extends Controller
         ->orderBy('iga_numero', 'desc' )
         ->select('ingregastos.id', 'iga_sociedad_id', 'iga_socio_id', 'iga_tipo', 'iga_numero', 
         'iga_Fecha', 'iga_concepto_id', 'iga_detalle', 'iga_Documento', 'iga_debito', 'iga_credito', 
-        'iga_grupo', 'iga_procesado', 'iga_idUsuario','soc_nombre','con_descripcion')
+        'iga_grupo', 'iga_procesado', 'iga_idUsuario','soc_nombre','con_descripcion', 'iga_anticipo')
         ->paginate(10);
 
         $conceptos = Concepto::where('con_sociedad_id', $user->sociedad_id)
@@ -68,8 +68,26 @@ class IngregastoController extends Controller
 
     }
 
+    public function recalculoSaldo()
+    {
+        $user = Auth::user();
+        
+        //  suma total Db y Cr y encuentra el neto que lo actualiza en sociedades
+        $debito = Ingregasto::sum('iga_debito');
+        $credito = Ingregasto::sum('iga_credito');
+
+        $neto = $debito - $credito;
+
+        Sociedad::where('id', $user->sociedad_id)
+       ->update(['sdd_saldo' => $neto]);
+
+        return redirect()->back()->with('success', 'Anticipo creado exitosamente.');
+    } 
+
     private function validate($request)
     {
+
+
         return $request->validate([
             'iga_sociedad_id' => 'required|exists:sociedades,id', 
             'iga_socio_id' => 'required|exists:socios,id',
@@ -83,6 +101,7 @@ class IngregastoController extends Controller
             'iga_credito' => 'required|numeric|min:0', // 
             'iga_grupo' => 'required|exists:grupos,id',  
             'iga_procesado' => 'required|in:S,N,A', // S=Si, N=No, A=Anulado
+            'iga_anticipo' => 'required|in:S,N', // S=Si, N=No, A=Anulado 
             'iga_idUsuario' => 'required|exists:users,id', // Asegurarse de que iga_idUsuario sea un usuario válido
         ]);
     }
@@ -93,6 +112,20 @@ class IngregastoController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        $sociedad = Sociedad::select( 'sdd_consecAjustes', 'sdd_consecIngreso', 'sdd_consecEgreso', 'sdd_saldo')
+        ->where('id', $user->sociedad_id)
+        ->get();
+
+        $tipo = $request['iga_tipo'];
+        if($tipo === 'A'){$nro =  $sociedad[0]->sdd_consecAjustes + 1; }
+        if($tipo === 'I'){$nro =  $sociedad[0]->sdd_consecIngreso + 1; }
+        if($tipo === 'G'){$nro =  $sociedad[0]->sdd_consecEgreso + 1; }
+
+        //dd($nro . ' ' . $tipo);
+        $request['iga_numero'] = $nro;
+        
         $validatedData = $this->validate($request);  // valida
 
         try {

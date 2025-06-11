@@ -82,13 +82,14 @@ export default function Ingregasto(props) {
     doc.text('Teléfono: ' + socio.soc_telefono,13,37)
     doc.text('Correo  : ' + socio.soc_email,13,41)
 
+    doc.setFontSize(12);
     if (ingregasto.iga_tipo === 'I')
     {
         doc.text('INGRESO NRO: ',25,51)
         doc.text(ingregasto.iga_numero.toString(), 53, 51);
         doc.text('Del ' + ingregasto.iga_Fecha, 61 , 51)
         doc.text(ingregasto.iga_detalle, 86 , 51)
-
+        doc.setFontSize(10);
         doc.rect(10, 55, 186, 6);
         doc.text('CONCEPTO',20,59)
         doc.text('FECHA',90,59)
@@ -99,6 +100,7 @@ export default function Ingregasto(props) {
         doc.text('EGRESO NRO: ',25,51)
         doc.text(ingregasto.iga_numero.toString(), 53, 51);
         doc.text('De   ' + ingregasto.iga_Fecha, 61 , 51)   
+        doc.setFontSize(10);
     }
  
 
@@ -156,12 +158,22 @@ export default function Ingregasto(props) {
         doc.text(socio.soc_nombre,70,60)
         doc.text('Indetificado con ',25,66) 
         doc.text(tipoDoc(socio.soc_tipodoc) + '- ' +  socio.soc_nrodoc,53,66)
-        doc.text('Teléfono : ' +   socio.soc_telefono,78,66)
-        doc.text('Por concepto de',25,72)
-        doc.text('La suma de',25,78)
-        let montoEnLetras = NumberAsString(452841);
-doc.text(montoEnLetras,35,78)
+        doc.text('Correo : ',25,72)
+        doc.text(socio.soc_email,53,72)
+        doc.text('Por concepto de',25,78)
+        let detalle =  ingregasto.iga_detalle
+        doc.text(detalle,53,78)
+    
+        doc.text('La suma de',25,84) 
+        let saldo = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP" }).format(
+    ingregasto.iga_credito)
+        let montoEnLetras = NumberAsString( ingregasto.iga_credito) + '('+ saldo + ')';
+        doc.text(montoEnLetras,53,84)
 
+        y = 100;
+        doc.line(20, y, 80, y);
+        y += 3;
+        doc.text(administra,25,y)
    
         //  trabajare los egresos.  
         // id, , , , , , iga_concepto_id, iga_detalle, iga_Documento, iga_credito

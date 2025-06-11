@@ -37,6 +37,7 @@ export default function Ingregasto(props) {
         iga_credito: '',
         iga_grupo: '', 
         iga_procesado: '',
+        iga_anticipo:'',
         iga_idUsuario:user.id,   
     });
  
@@ -49,7 +50,7 @@ export default function Ingregasto(props) {
             setTitle('Añadir: Ingreso, gasto o Ajuste');
             setData({iga_sociedad_id:user.sociedad_id, iga_socio_id:'', iga_tipo:'', iga_numero:'0', 
                 iga_Fecha:'', iga_concepto_id:'', iga_detalle:'', iga_Documento:'0', iga_debito:'', 
-                iga_credito:'', iga_grupo:'1', iga_procesado:'N', iga_idUsuario:user.id}); 
+                iga_credito:'', iga_grupo:'1', iga_procesado:'N', iga_anticipo:'N', iga_idUsuario:user.id}); 
         }
         else{
             setTitle('Modificar ingregasto');    
@@ -105,30 +106,19 @@ export default function Ingregasto(props) {
         }
     }
 
-    const imprimir = (id, tipo, numero) => {
-        if(tipo !== 'A'){
-            id=id + '|'+ numero + '|' + tipo
-            const response = Inertia.get(`/infoPago/`+id);
+    const imprimir = (id, tipo, numero, socioId, anticipo) => {
+        if(anticipo === 'N'){
+            if(tipo !== 'A'){
+                id=id + '|'+ numero + '|' + tipo +'|' +socioId
+                const response = Inertia.get(`/infoPago/`+id);
+                }
+                else{
+                    alert('Los ajustes no se imprimen')
+                }
+            }else{
+            alert ('Este es un anticipo.Para imprimirlo vaya a anticipos')
             }
-            else{
-                alert('Los ajustes no se imprimen')
-            }
-        }
-    
-    const imprimir2 = () => {
-        if( selectedSocioId !== ""){
-            const response = Inertia.get(`/infoPago/${selectedSocioId}`);
-        }
-            else{
-            alert('Seleccione un socio')
-        }
-    }
-
-
-
-
-
-
+    }    
 
     const eliminar = (id, tipo, numero, concepto, procesado) =>{
         var tipoAux = tipoIga[tipo]
@@ -161,6 +151,13 @@ export default function Ingregasto(props) {
 
     const [conceptosFiltrados, setConceptosFiltrados] = useState([]);
 
+
+    const recalculo = () =>{
+        alert('Calculo');
+        Inertia.post(`/recalculoSaldo`);
+    }
+
+
     // métodos de la vista
 
     function validate() {
@@ -174,6 +171,7 @@ export default function Ingregasto(props) {
         if(data.iga_concepto_id === ''){data.iga_concepto_id = '1'}
         return(true);
     }
+
 
     function handleTipoChange(event) {
         const tipo = event.target.value;
@@ -225,14 +223,14 @@ export default function Ingregasto(props) {
                     > Cierre parcial
                 </button> 
                 <button
-                    onClick={() => enDesarrollo('R')}
+                    onClick={() => recalculo() }
                     className="bg-violet-500 text-white px-4 py-1 mx-4 rounded mb-4"
                     > Recálculo de saldo
                 </button> 
                 <div className="bg-white grid v-screen place-items-center py-1">
                     <table className="w-full border-collapse border border-gray-300 text-xs">
                         <thead>
-                            <tr className='bg-gray-100'>
+                            <tr key={0} className='bg-gray-100'>
                                 <th className='px-2 py-1'>#</th>
                                 <th className='px-2 py-1'>TIPO</th>
                                 <th className='px-2 py-1'>NRO</th>
@@ -276,12 +274,17 @@ export default function Ingregasto(props) {
                                                 Editar
                                                 </button>
                                             </td>
+                                            
+                                       
                                             <td className='border border-gray-400 px-2 py-1'>
-                                                <button className='bg-cyan-500 hover:bg-blue-500 text-white font-bold py-1 px-1 rounded'
-                                                onClick={() => imprimir(ingregasto.id,ingregasto.iga_tipo, ingregasto.iga_numero)}>   
-                                                Imprimir
-                                                </button>
+                                                { ingregasto.iga_anticipo === 'N' && ingregasto.iga_tipo !== 'A' ? (   
+                                                    <button className='bg-cyan-500 hover:bg-blue-500 text-white font-bold py-1 px-1 rounded'
+                                                    onClick={() => imprimir(ingregasto.id,ingregasto.iga_tipo, ingregasto.iga_numero, ingregasto.iga_socio_id, ingregasto.iga_anticipo)}>   
+                                                    Imprimir
+                                                    </button>
+                                                ) : null}
                                             </td>
+                                        
                                             <td className='border border-gray-400 px-2 py-1'>
                                                 <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded'
                                                 onClick={() => eliminar(ingregasto.id,ingregasto.iga_tipo, ingregasto.iga_numero, ingregasto.iga_detalle, ingregasto.iga_procesado)}>   

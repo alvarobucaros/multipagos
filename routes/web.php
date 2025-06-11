@@ -73,6 +73,7 @@ Route::get('/ingregasto/{id}', [IngregastoController::class, 'show'])->name('ing
 Route::post('/ingregasto', [IngregastoController::class, 'store'])->name('ingregasto.store');
 Route::put('/ingregasto/{id}', [IngregastoController::class, 'update'])->name('ingregasto.update');
 Route::delete('/ingregasto/{id}', [IngregastoController::class, 'destroy'])->name('ingregasto.destroy');
+Route::post('/recalculoSaldo', [IngregastoController::class, 'recalculoSaldo'])->name('ingregasto.recalculoSaldo');
 
 Route::get('/infoPago/{id}', [PagoController::class, 'infoPago'])->name('infoPago');
 Route::get('/pago', [PagoController::class, 'index'])->name('pago');
