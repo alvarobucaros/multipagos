@@ -7,10 +7,13 @@ import Swal from 'sweetalert2';
 import Pagination from '@/Components//Pagination';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
+import axios from 'axios'; // Importa axios
+import { ReportesGRP } from '@/Utils/ReportesGRP'; // Importa la función del PDF
 
 export default function Grupo(props) {
     const user = usePage().props.auth.user;
     const [modal,setModal] = useState(false);
+    const [verOpcion,setVerOpcion] = useState(false);
     const [title,setTitle] = useState('');
     const [operation,setOperation] = useState(1);
 
@@ -120,6 +123,34 @@ export default function Grupo(props) {
 
     }
 
+    const [loading, setLoading] = useState(false);
+
+    const generarReporte = (tipo) => {
+        setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
+        setVerOpcion(false);
+        // Llama a la ruta de Laravel que creamos
+        axios.get(route('sociedad.datosGrupo', {tipo:tipo})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
+            .then(response => {
+                // Si la llamada es exitosa, response.data contiene el JSON
+                const { sociedad } = response.data;
+                const { grupos } = response.data;
+                const tipo = response.data.tipo;  
+                // Llama a la función que genera el PDF con los datos recibidos
+                ReportesGRP(sociedad, grupos, tipo);
+                alert('Reporte generado exitosamente');
+            })
+            .catch(error => {
+                // Manejo de errores
+                console.error("Error al obtener los datos para el reporte:", error);
+                alert("No se pudo generar el reporte. Inténtalo de nuevo.");
+            })
+            .finally(() => {
+                setLoading(false); // Vuelve a habilitar el botón
+            });
+    };
+
+    // Funciones de la vista.   
+
     function handleChange(e) {
         const { name, value } = e.target;
         setData((Data) => ({
@@ -148,6 +179,11 @@ export default function Grupo(props) {
                 className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
                 > Regreso
             </Link>
+            <button
+                onClick={() => {setTitle('Opciones de Reporte'); setVerOpcion(true);}}
+                className="bg-cyan-500 text-white px-4 py-1 mx-4 rounded mb-4"
+                > Listado grupos
+            </button>
             <span className='bg-blue-100'> GRUPOS DE SOCIOS </span> 
             <div className="bg-white grid v-screen place-items-center py-1">
                 <table className="w-full border-collapse border border-gray-300">
@@ -200,7 +236,27 @@ export default function Grupo(props) {
                     </tbody>
                 </table>
                  <Pagination class="mt-6" links={props.grupos.links} />
-            </div>    
+            </div>
+            <Modal show={verOpcion} onClose={() => setVerOpcion(false)}>
+                <h2 className="p-3 text-lg font-medium text-gray-900">
+                    Opciones de Reporte
+                </h2>
+                <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
+                    <button
+                        onClick={() => generarReporte('G')}
+                        className="bg-cyan-300 text-white px-4 py-1 mx-4 rounded mb-4"
+                    >
+                        Reporte de Grupo y sus socios
+                    </button>
+                    <button
+                        onClick={() => generarReporte('S')}
+                        className="bg-cyan-300 text-white px-4 py-1 mx-4 rounded mb-4"
+                    >
+                       Reporte de Socio y sus grupos
+                    </button>
+                </div>
+            </Modal>
+
             <Modal show={modal} onClose={closeModal}>
                 <h2 className="p-3 text-lg font-medium text-gray-900">
                     {title} 

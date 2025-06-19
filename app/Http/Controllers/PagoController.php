@@ -53,52 +53,7 @@ class PagoController extends Controller
                 'saldo'=> $saldo]);                   
     }
 
-    public function infoPago($id){
-        $ar = explode("|",$id);
-        $idIg = $ar[0];         // ide del ingeso gasto
-        $nroIg = $ar[1];        // Número de ingreso gasto
-        $tipoIg = $ar[2];       // Tipo de Ingreso Gasto
-        $socioId = $ar[3];      // Id del socio
-        $user = Auth::user();   //  Id de la sociedad
-
-        $ingregasto = Ingregasto::where('id',$idIg)
-        ->first();
-
-        $idcpt =  $ingregasto->iga_concepto_id; // Concepto
-
-        // trae el socio indicado
-        $socios = socio::select('soc_nombre', 'soc_telefono', 'soc_email' ,'soc_tipodoc' ,'soc_nrodoc')
-        ->where('id',$socioId)
-        ->first();
-
-        // trae información de la sociedad 
-        $sociedad = Sociedad::select('sdd_nombre', 'sdd_email', 'sdd_telefono', 'sdd_tipodoc', 
-        'sdd_nrodoc', 'sdd_logo', 'sdd_administra')
-        ->where('id', $user->sociedad_id)
-        ->first();
-
-        // trae los abonos que tiene el socio
-        $abonos = Abono::where('abo_socio_id', $id)
-        ->where('abo_sociedad_id', $user->sociedad_id)
-        ->where('abo_ingreso_id', $nroIg)
-        ->join('conceptos', 'conceptos.id', '=', 'abonos.abo_concepto_id')
-        ->select('abo_concepto_id', 'con_descripcion', 'abo_fecha', 'abo_descripcion', 
-        'abo_saldo', 'abo_abono', 'abo_ingreso_id' )
-        ->orderBy('abo_concepto_id')
-        ->get(); 
-
-        //  Trae los anticipos que tenga el socio
-        $anticipos = Anticipo::where('ant_socio_id', $id)
-        ->where('ant_ingreso', $nroIg )
-        ->where('ant_saldo','>',0)
-        ->select('ant_fecha', 'ant_detalle', 'ant_valor')
-        ->get();
-       
-        // llama al informe para mostrar la información
-        return Inertia::render('Ingregastos/Informe', ['socios' => $socios,  'sociedad' => $sociedad,
-                               'ingregasto' => $ingregasto, 'abonos' => $abonos, 'anticipos' => $anticipos ]);
-    }
-
+ 
     public function showCuales(Request $request, $id) // $id es el ID del socio
     {
         // Obtener todos los socios para repoblar el select (Inertia necesita todas las props de la página)

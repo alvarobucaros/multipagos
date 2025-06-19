@@ -158,6 +158,12 @@ export default function Index({ auth, socios: sociosList, cuentas: initialCuenta
         }
     }
 
+    const informes = (tipo) => {
+        alert(tipo);
+        const response = Inertia.put(`/infoSociedad/`+tipo);
+    }
+
+
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -221,6 +227,10 @@ export default function Index({ auth, socios: sociosList, cuentas: initialCuenta
                     <button type="submit"
                         className="bg-cyan-500 text-white px-4 py-1 mx-4 rounded mt-4"
                         > Aplicar pago
+                    </button>
+                    <button  onClick={() => informes('EC')}  // reporte estado decuenta
+                        className="bg-blue-400 text-white px-4 py-1 mx-4 rounded mt-4"
+                        > Imprime informe
                     </button>
 
                 </div>

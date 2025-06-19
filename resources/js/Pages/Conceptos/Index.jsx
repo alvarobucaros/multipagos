@@ -8,6 +8,8 @@ import Pagination from '@/Components//Pagination';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
 import MiSelectDinamico from '@/Components/MiSelectDinamico';
+import axios from 'axios'; // Importa axios
+import { ReportesCP } from '@/Utils/ReportesCP'; // Importa la función del PDF
 
 export default function Concepto(props) {
     const user = usePage().props.auth.user;
@@ -150,6 +152,31 @@ export default function Concepto(props) {
         });
     }
 
+    const [loading, setLoading] = useState(false);
+
+    const generarReporte = (tipo) => {
+        setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
+
+        // Llama a la ruta de Laravel que creamos
+        axios.get(route('sociedad.datosConcepto', {tipo:tipo})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
+            .then(response => {
+                // Si la llamada es exitosa, response.data contiene el JSON
+                const { sociedad } = response.data;
+                const { conceptos } = response.data;
+                // Llama a la función que genera el PDF con los datos recibidos
+                ReportesCP(sociedad, conceptos);
+                alert('Reporte generado exitosamente');
+            })
+            .catch(error => {
+                // Manejo de errores
+                console.error("Error al obtener los datos para el reporte:", error);
+                alert("No se pudo generar el reporte. Inténtalo de nuevo.");
+            })
+            .finally(() => {
+                setLoading(false); // Vuelve a habilitar el botón
+            });
+    };
+
 
     //  Médotos usados en la pagina
 
@@ -245,8 +272,13 @@ export default function Concepto(props) {
                 className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
                 > Regreso
             </Link>
+            <button
+                onClick={() => generarReporte('AN')}
+                className="bg-cyan-500 text-white px-4 py-1 mx-4 rounded mb-4"
+                > Listado conceptos
+            </button>
             <span className='bg-blue-100'> CONCEPTOS </span> 
-            <div className="bg-white grid v-screen place-items-center py-1">
+            <div className="bg-white grid v-screen place-items-center py-1 text-xs">
                 <table className="w-full border-collapse border border-gray-300">
                     <thead>
                         <tr className='bg-gray-100'>
@@ -268,7 +300,7 @@ export default function Concepto(props) {
 
                     <tbody>
                         {props.conceptos.data.map((concepto) => (
-                            <tr key={concepto.id} className='text-sm'>
+                            <tr key={concepto.id} className='text-xs'>
                                 <td className='border border-gray-400 px-2 py-1'>{concepto.id}</td>
                                 <td className="border border-gray-400 px-2 py-1">
                                     {tipos[concepto.con_tipo] || 'Desconocido'}

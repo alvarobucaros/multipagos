@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 import { useState, React } from 'react';
-import { Head, usePage} from '@inertiajs/react';
+import { Head, usePage, Link} from '@inertiajs/react';
 
 import MiCard from '@/Components/MiCard';
 
@@ -22,6 +22,12 @@ export default function Dashboard(props) {
 
             <>
             
+                <Link
+                    href="/mimenu"
+                    className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
+                    > Menú
+                </Link>
+
             {props.posts.data.map((posts) => (
                 <MiCard titulo={posts.pos_titulo} texto={posts.pos_descripcion}
                 

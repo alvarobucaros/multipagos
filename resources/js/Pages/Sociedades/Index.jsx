@@ -6,6 +6,8 @@ import { Head ,useForm, usePage, Link} from '@inertiajs/react';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
 import MiTextArea from '@/Components/MiTextArea';
+import axios from 'axios'; // Importa axios
+import { ReportesPDF } from '@/Utils/ReportesPDF'; // Importa la función del PDF
 
 export default function Sociedad(props) {
 
@@ -14,10 +16,9 @@ export default function Sociedad(props) {
     const [sociedad, setSociedad] = useState(props.sociedad);
     const [operation, setOperation] = useState('1'); 
 
-    // if (!sociedad) {
-    //     return <p>Cargando...</p>; // Muestra un mensaje de carga mientras `sociedad` se carga
-    // }
-    
+    const [visible, setVisible] = useState(false);
+    const [verMenu, setVerMenu] = useState(true);
+  
     const { data, setData } = useForm({
         id: sociedad.id, 
         sdd_nombre: sociedad.sdd_nombre,
@@ -93,6 +94,41 @@ export default function Sociedad(props) {
         });
     }
 
+    const informes = (tipo) => {
+        const response = Inertia.put(`/infoSociedad/`+tipo);
+    }
+
+    const ayudas = () => {
+        const response = Inertia.put(`/ayudas/`);
+    }
+
+    /// ************************
+    /// Generación del PDF de la sociedad
+    
+    const [loading, setLoading] = useState(false); // Estado para mostrar feedback al usuario
+
+    const generarReporte = (tipo) => {
+        setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
+
+        // Llama a la ruta de Laravel que creamos
+        axios.get(route('sociedad.datosSociedad', {tipo:tipo})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
+            .then(response => {
+                // Si la llamada es exitosa, response.data contiene el JSON
+                const { sociedad } = response.data;
+                
+                // Llama a la función que genera el PDF con los datos recibidos
+                ReportesPDF(sociedad);
+            })
+            .catch(error => {
+                // Manejo de errores
+                console.error("Error al obtener los datos para el reporte:", error);
+                alert("No se pudo generar el reporte. Inténtalo de nuevo.");
+            })
+            .finally(() => {
+                setLoading(false); // Vuelve a habilitar el botón
+            });
+    };
+
     function handleChange(e) {
         const { name, value } = e.target;
         setData((Data) => ({
@@ -108,12 +144,12 @@ export default function Sociedad(props) {
         >
          
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out">
-       
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
+       { visible && (
+            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
                 <h2 className="p-0 text-lg font-medium text-gray-900">
                     Nuestra sociedad
                 </h2>
-                <div className="bg-white rounded-lg shadow-xl p-2 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
+                <div className="bg-white rounded-lg shadow-xl p-2 w-full max-w-xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
                     <form onSubmit={save}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                              
@@ -188,7 +224,60 @@ export default function Sociedad(props) {
                     </form>
                 </div>
             </div>
-            </div>        
+       )}{ null }
+        { verMenu && (
+
+            <div className="absolute inset-x-0 top-0 h-16 p-6">
+                      
+                <div className='grid grid-cols-7 gap-4'>
+                           
+                    {/* <button
+                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
+                        onClick={() => informes('LG')}
+                        > Listado de Grupos 
+                    </button> */}
+            <button
+                className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => generarReporte('LG')}
+                disabled={loading} // El botón se deshabilita mientras se genera
+            > 
+                {loading ? 'Generando...' : 'Listado de Grupos'}
+            </button>
+                    <button
+                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
+                        onClick={() => informes('CC')}
+                        > Informe Cuentas por Cobrar 
+                    </button>
+                    <button
+                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
+                        onClick={() => informes('IG')}
+                        > Informe Ingreso y Gasto 
+                    </button>
+                    <button
+                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
+                        onClick={() => informes('CA')}
+                        > Resumen Cartera
+                    </button>
+                    <button
+                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
+                        onClick={() => {setVisible(true); setVerMenu(false)}}
+                        > Parámetros
+                    </button> 
+                    <button
+                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
+                        onClick={() => ayudas()}
+                        > Ayudas
+                    </button>  
+                    <Link
+                        href="/mimenu"
+                       className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
+                    > Regreso
+                </Link>   
+                </div>
+            </div>
+            )}{ null }
+        
+        </div>        
         </AuthenticatedLayout>
     );
 

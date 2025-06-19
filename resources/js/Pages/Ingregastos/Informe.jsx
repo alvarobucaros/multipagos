@@ -3,7 +3,7 @@ import { Inertia } from '@inertiajs/inertia';
 
 import { useRef, useState, useEffect, React } from 'react';
 import { Head ,useForm, usePage, Link} from '@inertiajs/react';
-// import Monto from '@/Utils/Monto';
+// import Monto from '@/Utils/Monto';   http://localhost:8000/datosIngreGasto/6|2|I|12"
 import { NumberAsString } from '@/Utils/formatters';
 
 import { jsPDF } from "jspdf";
@@ -23,7 +23,7 @@ export default function Ingregasto(props) {
 
     const [anticipo, setAnticipo] = useState(props.anticipos || []);
 
-    console.log(ingregasto)
+   // console.log(ingregasto)
 
     const tipoDoc = (tipo) => {
         var ti= 'NIT';
@@ -43,7 +43,23 @@ export default function Ingregasto(props) {
     const tel = sociedad.sdd_telefono; 
     const mail = sociedad.sdd_email;
     const administra = sociedad.sdd_administra.toUpperCase();
-    const logo = '../../../logos/images/' + sociedad.sdd_logo;
+    const logo = 'logos/' + sociedad.sdd_logo;
+    
+    function imprimelogo() {
+        fetch('/logos/logo.png') // Usa la ruta pública
+        .then(response => response.blob())
+        .then(blob => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+            const base64Logo = reader.result;
+            doc.addImage(base64Logo, 'PNG', 5, 10, 20, 20);
+            
+        };
+    })
+    .catch(error => console.error('Error cargando el logo:', error));
+    
+    } 
 
     var pdfCreado ='';
     var longitud = 0; 
@@ -81,14 +97,15 @@ export default function Ingregasto(props) {
     doc.text(tipoDoc(socio.soc_tipodoc) + '- ' +  socio.soc_nrodoc,93,33)
     doc.text('Teléfono: ' + socio.soc_telefono,13,37)
     doc.text('Correo  : ' + socio.soc_email,13,41)
-
+   // doc.addImage(logo, 'PNG', 5, 10, 20, 20);
+    imprimelogo();
     doc.setFontSize(12);
     if (ingregasto.iga_tipo === 'I')
     {
-        doc.text('INGRESO NRO: ',25,51)
-        doc.text(ingregasto.iga_numero.toString(), 53, 51);
-        doc.text('Del ' + ingregasto.iga_Fecha, 61 , 51)
-        doc.text(ingregasto.iga_detalle, 86 , 51)
+        doc.text('INGRESO NRO: ',20,51)
+        doc.text(ingregasto.iga_numero.toString(), 50, 51);
+        doc.text('Del ' + ingregasto.iga_Fecha, 60 , 51)
+        doc.text(ingregasto.iga_detalle, 90 , 51)
         doc.setFontSize(10);
         doc.rect(10, 55, 186, 6);
         doc.text('CONCEPTO',20,59)

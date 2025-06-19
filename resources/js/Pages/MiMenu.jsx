@@ -48,7 +48,7 @@ export default function MiMenu(props) {
                     </Link>   
 
                     <Link href="/sociedad/1" className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition duration-300">
-                        <h3 className='text-center'>Mi Empresa</h3>
+                        <h3 className='text-center'>Consultas</h3>
                     </Link>
                 </div>
             </div>

@@ -8,6 +8,7 @@ import Pagination from '@/Components//Pagination';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
 import MiSelectDinamico from '@/Components/MiSelectDinamico';
+import { ReportesIG } from '@/Utils/ReportesIG';
 
 
 export default function Ingregasto(props) {
@@ -102,11 +103,49 @@ export default function Ingregasto(props) {
                 setModal(false);
             }
         }else{
-            alert('Error en la validación de datos');
+            alert('Error en la validación de datos ');
         }
     }
 
+    const [loading, setLoading] = useState(false);
+
     const imprimir = (id, tipo, numero, socioId, anticipo) => {
+        if(anticipo === 'N'){
+            if(tipo !== 'A'){
+                setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
+              
+                id=id + '|'+ numero + '|' + tipo +'|' +socioId
+                // Llama a la ruta de Laravel que creamos
+                axios.get(route('sociedad.datosIngreGasto', {id:id})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
+                    .then(response => {
+                        // Si la llamada es exitosa, response.data contiene el JSON
+                        const { sociedad } = response.data;
+                        const { socios } = response.data;
+                        const {ingregasto} = response.data;
+                        const {abonos} = response.data;
+                        const {anticipos} = response.data;
+                        // Llama a la función que genera el PDF con los datos recibidos
+                        ReportesIG(sociedad, socios, ingregasto, abonos, anticipos);
+                        alert('Reporte generado exitosamente');
+                    })
+                    .catch(error => {
+                        // Manejo de errores
+                        console.error("Error al obtener los datos para el reporte:", error);
+                        alert("No se pudo generar el reporte. Inténtalo de nuevo.");
+                    })
+                    .finally(() => {
+                        setLoading(false); // Vuelve a habilitar el botón
+                    });
+            }
+        else{
+            alert('Los ajustes no se imprimen')
+        }
+        }else{
+            alert ('Este es un anticipo.Para imprimirlo vaya a anticipos')
+        }
+    };
+
+    const imprimirOld = (id, tipo, numero, socioId, anticipo) => {
         if(anticipo === 'N'){
             if(tipo !== 'A'){
                 id=id + '|'+ numero + '|' + tipo +'|' +socioId
@@ -116,9 +155,9 @@ export default function Ingregasto(props) {
                     alert('Los ajustes no se imprimen')
                 }
             }else{
-            alert ('Este es un anticipo.Para imprimirlo vaya a anticipos')
+                alert ('Este es un anticipo.Para imprimirlo vaya a anticipos')
             }
-    }    
+    }     
 
     const eliminar = (id, tipo, numero, concepto, procesado) =>{
         var tipoAux = tipoIga[tipo]

@@ -8,6 +8,8 @@ import Pagination from '@/Components//Pagination';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
 import MiSelectDinamico from '@/Components/MiSelectDinamico';
+import axios from 'axios'; // Importa axios
+import { ReportesAN } from '@/Utils/ReportesAN'; // Importa la función del PDF
 
 export default function anticipo(props) {
     const user = usePage().props.auth.user;
@@ -143,7 +145,7 @@ export default function anticipo(props) {
 
 
     const estadoOptions = [
-        { value: '', label: '-- Selecciona un estado --' }, // O pción por defecto/placeholder
+        { value: '', label: '-- Selecciona un estado --' }, // O opción por defecto/placeholder
         { value: 'A', label: 'Aplicado' },
         { value: 'I', label: 'Iniciado' },
     ];
@@ -177,6 +179,32 @@ export default function anticipo(props) {
         });
     };
 
+    const [loading, setLoading] = useState(false);
+
+    const generarReporte = (tipo) => {
+        setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
+
+        // Llama a la ruta de Laravel que creamos
+        axios.get(route('sociedad.datosAnticipo', {tipo:tipo})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
+            .then(response => {
+                // Si la llamada es exitosa, response.data contiene el JSON
+                const { sociedad } = response.data;
+                const { anticipos } = response.data;
+                // Llama a la función que genera el PDF con los datos recibidos
+                ReportesAN(sociedad, anticipos);
+                alert('Reporte generado exitosamente');
+            })
+            .catch(error => {
+                // Manejo de errores
+                console.error("Error al obtener los datos para el reporte:", error);
+                alert("No se pudo generar el reporte. Inténtalo de nuevo.");
+            })
+            .finally(() => {
+                setLoading(false); // Vuelve a habilitar el botón
+            });
+    };
+
+
      return (
           <AuthenticatedLayout
               auth={props.auth}
@@ -197,6 +225,11 @@ export default function anticipo(props) {
                   className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
                   > Regreso
               </Link>
+              <button
+                  onClick={() => generarReporte('AN')}
+                  className="bg-cyan-500 text-white px-4 py-1 mx-4 rounded mb-4"
+                  > Listado anticipos
+              </button>
               <span className='bg-blue-100'> ANTICIPOS </span> 
               <div className="bg-white grid v-screen place-items-center py-1">
                   <table className="w-full border-collapse border border-gray-300">

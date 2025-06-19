@@ -16,6 +16,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\SociedadController;
 use App\Http\Controllers\SocioController;
+use App\Http\Controllers\ReportesController;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
@@ -27,7 +28,22 @@ Route::get('/', function () {
     ]);
 });
 
-//Route::get('/' , [PostController::class, 'indexPost'])->name('/');
+//Reportes
+Route::get('/datosSociedad/{tipo}', [ReportesController::class, 'generarDatosReporteLC'])->name('sociedad.datosSociedad');
+Route::get('/datosAnticipo/{tipo}', [ReportesController::class, 'generarDatosReporteAN'])->name('sociedad.datosAnticipo');
+Route::get('/datosConcepto/{tipo}', [ReportesController::class, 'generarDatosReporteCP'])->name('sociedad.datosConcepto');
+Route::get('/datosGrupo/{tipo}', [ReportesController::class, 'generarDatosReporteGRP'])->name('sociedad.datosGrupo');
+Route::get('/datosIngreGasto/{tipo}', [ReportesController::class, 'generarDatosReporteIG'])->name('sociedad.datosIngreGasto');
+
+
+// Sociedades
+Route::get('/sociedad', [SociedadController::class, 'index'])->name('sociedad');
+Route::get('/sociedad/{id}', [SociedadController::class, 'show'])->name('sociedad.show');
+Route::post('/sociedad', [SociedadController::class, 'store'])->name('sociedad.store');
+Route::put('/sociedad/{id}', [SociedadController::class, 'update'])->name('sociedad.update');
+Route::delete('/sociedad/{id}', [SociedadController::class, 'destroy'])->name('sociedad.destroy');
+Route::put('/infoSociedad/{id}', [SociedadController::class, 'infoSociedad'])->name('sociedad.infoSociedad');
+
 
 Route::get('/dashboard', [PostController::class, 'indexPost'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/mimenu', [PostController::class, 'indexMenu'])->name('menu');
@@ -75,7 +91,7 @@ Route::put('/ingregasto/{id}', [IngregastoController::class, 'update'])->name('i
 Route::delete('/ingregasto/{id}', [IngregastoController::class, 'destroy'])->name('ingregasto.destroy');
 Route::post('/recalculoSaldo', [IngregastoController::class, 'recalculoSaldo'])->name('ingregasto.recalculoSaldo');
 
-Route::get('/infoPago/{id}', [PagoController::class, 'infoPago'])->name('infoPago');
+/// Route::get('/infoPago/{id}', [PagoController::class, 'infoPago'])->name('infoPago'); 
 Route::get('/pago', [PagoController::class, 'index'])->name('pago');
 Route::get('/pago/{id}', [PagoController::class, 'show'])->name('pago.show');
 Route::post('/pago', [PagoController::class, 'store'])->name('pago.store');
@@ -83,12 +99,6 @@ Route::put('/pagoSaldo/{id}', [PagoController::class, 'update'])->name('pago.upd
 Route::delete('/pago/{id}', [PagoController::class, 'destroy'])->name('pago.destroy');
 Route::post('/pagoCual/{id}', [PagoController::class, 'showCuales'])->name('pago.showCuales');
 Route::get('/pagoSocio/{id}', [PagoController::class, 'showPagos'])->name('pago.showPagos');
-
-Route::get('/sociedad', [SociedadController::class, 'index'])->name('sociedad');
-Route::get('/sociedad/{id}', [SociedadController::class, 'show'])->name('sociedad.show');
-Route::post('/sociedad', [SociedadController::class, 'store'])->name('sociedad.store');
-Route::put('/sociedad/{id}', [SociedadController::class, 'update'])->name('sociedad.update');
-Route::delete('/sociedad/{id}', [SociedadController::class, 'destroy'])->name('sociedad.destroy');
 
 Route::get('/socio', [SocioController::class, 'index'])->name('socio');
 Route::get('/socio/{id}', [SocioController::class, 'show'])->name('socio.show');
