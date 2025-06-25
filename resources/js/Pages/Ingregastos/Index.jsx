@@ -113,9 +113,9 @@ export default function Ingregasto(props) {
         if(anticipo === 'N'){
             if(tipo !== 'A'){
                 setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
-              
-                id=id + '|'+ numero + '|' + tipo +'|' +socioId
-                // Llama a la ruta de Laravel que creamos
+             
+                id=id + '|'+ numero + '|' + tipo +'|' +socioId + '|'+anticipo;  // esto lo envia al informe
+                //  Llama a la ruta de Laravel que creamos
                 axios.get(route('sociedad.datosIngreGasto', {id:id})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
                     .then(response => {
                         // Si la llamada es exitosa, response.data contiene el JSON
@@ -144,20 +144,7 @@ export default function Ingregasto(props) {
             alert ('Este es un anticipo.Para imprimirlo vaya a anticipos')
         }
     };
-
-    const imprimirOld = (id, tipo, numero, socioId, anticipo) => {
-        if(anticipo === 'N'){
-            if(tipo !== 'A'){
-                id=id + '|'+ numero + '|' + tipo +'|' +socioId
-                const response = Inertia.get(`/infoPago/`+id);
-                }
-                else{
-                    alert('Los ajustes no se imprimen')
-                }
-            }else{
-                alert ('Este es un anticipo.Para imprimirlo vaya a anticipos')
-            }
-    }     
+  
 
     const eliminar = (id, tipo, numero, concepto, procesado) =>{
         var tipoAux = tipoIga[tipo]

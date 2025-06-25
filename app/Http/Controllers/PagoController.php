@@ -105,8 +105,7 @@ class PagoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = Auth::user();
-      
+        $user = Auth::user();      
         $id;                    // id del socio
         $vltAnticipo = 0;       // valor anticipo a procesar
         $aplicado=0;            // Cuanto se aplica de los pagos
@@ -160,7 +159,7 @@ class PagoController extends Controller
                 $aplicado=0;
                 $anticipo = 'N';
                 $ctrlIngreso = true;
- //   dd($cuenta);
+
                 // Recorre cada cuenta por cada concepro
                 foreach ($cuenta as $cta) {
                     $cxcid = $cta->id;
@@ -243,7 +242,8 @@ class PagoController extends Controller
                 $this->creaIngregast( $id, $today, $detalle, $item['cxc_concepto_id'], $cta->cxc_grupo_id,$abono, false, $anticipo);
             }
         }
-        return;
+   return Inertia::location(route('pago'));
+   return response()->json(['status' => 'ok']);
     }
 
         public function creaIngregast( $id, $today, $detalle, $concepto, $grupo, $aplicado, $consec, $anticipo )

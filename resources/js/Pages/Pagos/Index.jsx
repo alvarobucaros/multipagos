@@ -144,9 +144,9 @@ export default function Index({ auth, socios: sociosList, cuentas: initialCuenta
     const save = (e) =>{
         e.preventDefault();
         if( selectedSocioId !== ""){
-        // Actualiza los pagos digitados
+        // Actualiza los pagos digitados y crea anticipo, si hay
             try {
-                const response = Inertia.put(`/pagoSaldo/${selectedSocioId}`, saldo);
+                const response = Inertia.post(`/pago/${selectedSocioId}`, saldo);
                 alert('Datos actualizados exitosamente');
                 console.log('Respuesta:', response);
             } catch (error) {
@@ -228,10 +228,10 @@ export default function Index({ auth, socios: sociosList, cuentas: initialCuenta
                         className="bg-cyan-500 text-white px-4 py-1 mx-4 rounded mt-4"
                         > Aplicar pago
                     </button>
-                    <button  onClick={() => informes('EC')}  // reporte estado decuenta
+                    {/* <button  onClick={() => informes('EC')}  // reporte estado decuenta
                         className="bg-blue-400 text-white px-4 py-1 mx-4 rounded mt-4"
                         > Imprime informe
-                    </button>
+                    </button> */}
 
                 </div>
                 </form>

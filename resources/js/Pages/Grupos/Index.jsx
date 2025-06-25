@@ -8,7 +8,7 @@ import Pagination from '@/Components//Pagination';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
 import axios from 'axios'; // Importa axios
-import { ReportesGRP } from '@/Utils/ReportesGRP'; // Importa la función del PDF
+import { ReportesGRP } from '@/Utils/ReportesGRP'; // Importa la función del PDF 
 
 export default function Grupo(props) {
     const user = usePage().props.auth.user;

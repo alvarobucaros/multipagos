@@ -128,7 +128,7 @@ class SociedadController extends Controller
         $ingregasto = [];
 
         if($id === 'LG'){
-            //  Recupera grupos 
+            //  Recupera  grupos 
             $grupos = Grupo::where( 'grp_sociedad_id',  $user->sociedad_id)
             ->orderBy('grp_titulo')
             ->get();

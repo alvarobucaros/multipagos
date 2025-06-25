@@ -28,13 +28,24 @@ Route::get('/', function () {
     ]);
 });
 
-//Reportes
+Route::get('/welcome', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'appVersion' => '1.0.0 - beta ',  
+        'phpVersion' => PHP_VERSION,
+    ]);
+})->name('welcome');
+
+//Reporte
 Route::get('/datosSociedad/{tipo}', [ReportesController::class, 'generarDatosReporteLC'])->name('sociedad.datosSociedad');
+Route::get('/datosEnMora/{fecha}', [ReportesController::class, 'generarDatosReporteMORA'])->name('sociedad.datosEnMora');
 Route::get('/datosAnticipo/{tipo}', [ReportesController::class, 'generarDatosReporteAN'])->name('sociedad.datosAnticipo');
 Route::get('/datosConcepto/{tipo}', [ReportesController::class, 'generarDatosReporteCP'])->name('sociedad.datosConcepto');
 Route::get('/datosGrupo/{tipo}', [ReportesController::class, 'generarDatosReporteGRP'])->name('sociedad.datosGrupo');
 Route::get('/datosIngreGasto/{tipo}', [ReportesController::class, 'generarDatosReporteIG'])->name('sociedad.datosIngreGasto');
-
+Route::get('/datosCuenta/{tipo}', [ReportesController::class, 'generarDatosReporteCXC'])->name('sociedad.datosCuenta');
 
 // Sociedades
 Route::get('/sociedad', [SociedadController::class, 'index'])->name('sociedad');
@@ -94,8 +105,8 @@ Route::post('/recalculoSaldo', [IngregastoController::class, 'recalculoSaldo'])-
 /// Route::get('/infoPago/{id}', [PagoController::class, 'infoPago'])->name('infoPago'); 
 Route::get('/pago', [PagoController::class, 'index'])->name('pago');
 Route::get('/pago/{id}', [PagoController::class, 'show'])->name('pago.show');
-Route::post('/pago', [PagoController::class, 'store'])->name('pago.store');
-Route::put('/pagoSaldo/{id}', [PagoController::class, 'update'])->name('pago.update');
+// Route::post('/pago', [PagoController::class, 'store'])->name('pago.store');
+Route::post('/pago/{id}', [PagoController::class, 'update'])->name('pago.update');
 Route::delete('/pago/{id}', [PagoController::class, 'destroy'])->name('pago.destroy');
 Route::post('/pagoCual/{id}', [PagoController::class, 'showCuales'])->name('pago.showCuales');
 Route::get('/pagoSocio/{id}', [PagoController::class, 'showPagos'])->name('pago.showPagos');

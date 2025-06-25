@@ -10,10 +10,12 @@
  import MiSelectDinamico from '@/Components/MiSelectDinamico';
  
  export default function cuentahead(props) {
-     const user = usePage().props.auth.user;
-     const [modal,setModal] = useState(false);
-     const [title,setTitle] = useState('');
-     const [operation,setOperation] = useState(1);
+    const user = usePage().props.auth.user;
+    const [modal,setModal] = useState(false);
+    const [verOpcion,setVerOpcion] = useState(false);
+    const [title,setTitle] = useState('');
+     
+    const [operation,setOperation] = useState(1);
 
     const [conceptos, setConceptos] = useState(props.conceptos);
 
@@ -146,6 +148,35 @@
         return(true)
     }   
 
+    const [loading, setLoading] = useState(false);
+
+    const handleChangeRep = (event) => {
+        const { name, value } = event.target;      
+        generarReporte(value);
+    }
+
+    const generarReporte = (tipo) => {
+    setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
+  alert(tipo);
+    // Llama a la ruta de Laravel que creamos
+         axios.get(route('sociedad.datosCuenta', {tipo:tipo})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
+        .then(response => {
+            // Si la llamada es exitosa, response.data contiene el JSON
+            const { sociedad } = response.data;
+            const { cuentas } = response.data;
+            // Llama a la función que genera el PDF con los datos recibidos
+            ReportesCXC(sociedad, cuentas);
+            alert('Reporte generado exitosamente');
+        })
+        .catch(error => {
+            // Manejo de errores
+            console.error("Error al obtener los datos para el reporte:", error);
+            alert("No se pudo generar el reporte. Inténtalo de nuevo.");
+        })
+        .finally(() => {
+            setLoading(false); // Vuelve a habilitar el botón
+        });
+    };
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -184,7 +215,12 @@
                     href="/mimenu"
                     className="bg-green-500 text-white px-4 py-1 mx-4 rounded mb-4"
                     > Regreso
-                </Link>
+                </Link> 
+           <button
+                onClick={() => {setTitle('Opciones de Reporte'); setVerOpcion(true);}}
+                className="bg-cyan-500 text-white px-4 py-1 mx-4 rounded mb-4"
+                > Listado CxC
+            </button>
                 <span className='bg-blue-100'> CUENTAS POR COBRAR </span>        
             </div>
              <div className="bg-white grid v-screen place-items-center py-1">
@@ -254,50 +290,64 @@
                 </table>
                  <Pagination class="mt-6" links={props.cuentashead.links} />
             </div>
-              <Modal show={modal} onClose={closeModal}>
-                  <h2 className="p-3 text-lg font-medium text-gray-900">
-                      {title} 
-                  </h2>
-                  <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
-                      <form onSubmit={save}>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <MiSelectDinamico 
-                                    Id="cxh_concepto_id"  Label="Concepto"  data ={data.cxh_concepto_id}
-                                    listas = {conceptos} OnChange={handleChange} required={true}>
-                                </MiSelectDinamico>
-                                <br />
 
-                                {/* <MiSelectDinamico 
-                                    Id="cxh_grupo"  Label="Grupo "  data ={data.cxh_grupo}
-                                    listas = {grupos} OnChange={handleChange} required={true}>
-                                </MiSelectDinamico> */}
+            <Modal show={verOpcion} onClose={() => setVerOpcion(false)}>
+                <h2 className="p-3 text-lg font-medium text-gray-900">
+                    Opciones de Reporte
+                </h2>
 
-                                <br />
 
-                                <MiInput  Id="cxh_fchinicio" Type="date" Label="Fecha inicio" onChange={handleChange}
-                                classNameI="" maxLength ="50" data ={data.cxh_fchinicio} required={true}  
-                                OnChange = {handleChange} ></MiInput>
+                <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
+                    <button
+                        onClick={() => generarReporte(0)}
+                        className="bg-cyan-300 text-white px-4 py-1 mx-4 rounded mb-4"
+                    >
+                       Todos los conceptos
+                    </button>
+                    <MiSelectDinamico 
+                        Id="cxh_concepto_id"  Label="Concepto"  data ={data.cxh_concepto_id}
+                        listas = {conceptos} OnChange={handleChangeRep} required={true}>
+                    </MiSelectDinamico>
+                </div>
+            </Modal>
 
-                                <MiInput  Id="cxh_detalle" Type="text" Label="Detalle" onChange={handleChange}
-                                classNameI="md:col-span-2" maxLength ="100" data ={data.cxh_detalle} required={true}  
-                                OnChange = {handleChange} ></MiInput>
-  
-                                <div className="flex justify-end">
-                                  <button type="button"
-                                      className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded'
-                                      onClick={() => setModal(false)}
-                                  >
-                                      Cancelar
-                                  </button>
-                                  <button processing={processing} 
-                                      className='bg-blue-500 hover:bg-blue-700 text-white font-bold mx-3 py-1 px-1 rounded'>
-                                       Guardar
-                                  </button>
-                              </div>
-                          </div>                      
-                      </form>
-                  </div>
-              </Modal>
+            <Modal show={modal} onClose={closeModal}>
+                <h2 className="p-3 text-lg font-medium text-gray-900">
+                    {title} 
+                </h2>
+                <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
+                    <form onSubmit={save}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <MiSelectDinamico 
+                                Id="cxh_concepto_id"  Label="Concepto"  data ={data.cxh_concepto_id}
+                                listas = {conceptos} OnChange={handleChange} required={true}>
+                            </MiSelectDinamico>
+                            <br />
+
+                            <MiInput  Id="cxh_fchinicio" Type="date" Label="Fecha inicio" onChange={handleChange}
+                            classNameI="" maxLength ="50" data ={data.cxh_fchinicio} required={true}  
+                            OnChange = {handleChange} ></MiInput>
+
+                            <MiInput  Id="cxh_detalle" Type="text" Label="Detalle" onChange={handleChange}
+                            classNameI="md:col-span-2" maxLength ="100" data ={data.cxh_detalle} required={true}  
+                            OnChange = {handleChange} ></MiInput>
+
+                            <div className="flex justify-end">
+                                <button type="button"
+                                    className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded'
+                                    onClick={() => setModal(false)}
+                                >
+                                    Cancelar
+                                </button>
+                                <button processing={processing} 
+                                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold mx-3 py-1 px-1 rounded'>
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>                      
+                    </form>
+                </div>
+            </Modal>
         </AuthenticatedLayout>
 
      )

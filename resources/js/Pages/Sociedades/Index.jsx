@@ -3,19 +3,20 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
 import { useRef, useState, React } from 'react';
 import { Head ,useForm, usePage, Link} from '@inertiajs/react';
+import Modal from '@/Components/Modal';
 import MiInput from '@/Components/MiInput';
 import MiLista from '@/Components/MiLista';
 import MiTextArea from '@/Components/MiTextArea';
 import axios from 'axios'; // Importa axios
-import { ReportesPDF } from '@/Utils/ReportesPDF'; // Importa la función del PDF
+import { ReportesMORA } from '@/Utils/ReportesMORA'; // Importa la función del PDF
 
 export default function Sociedad(props) {
 
     const user = usePage().props.auth.user;
- 
+    const [title,setTitle] = useState('');
     const [sociedad, setSociedad] = useState(props.sociedad);
     const [operation, setOperation] = useState('1'); 
-
+    const [verOpcion,setVerOpcion] = useState(false);
     const [visible, setVisible] = useState(false);
     const [verMenu, setVerMenu] = useState(true);
   
@@ -50,6 +51,10 @@ export default function Sociedad(props) {
         { value: 'A', label: 'Activo' },
         { value: 'I', label: 'Inactivo' },
     ];
+
+    const[errors, setErrors] = useState({});
+
+    var fecha = null;
 
     const save = (e) =>{
         e.preventDefault();
@@ -95,29 +100,35 @@ export default function Sociedad(props) {
     }
 
     const informes = (tipo) => {
-        const response = Inertia.put(`/infoSociedad/`+tipo);
+        alert('Informe de ' + tipo + ' - En procso');
+        // const response = Inertia.put(`/infoSociedad/`+tipo);
     }
 
     const ayudas = () => {
-        const response = Inertia.put(`/ayudas/`);
+       alert ('Ayudas de la Aplicación - En procso')
     }
 
-    /// ************************
-    /// Generación del PDF de la sociedad
-    
     const [loading, setLoading] = useState(false); // Estado para mostrar feedback al usuario
 
-    const generarReporte = (tipo) => {
+    const info = (event) => {
+        event.preventDefault(); 
+        fecha = event.target.fecha.value; 
         setLoading(true); // Deshabilita el botón y muestra un spinner, por ejemplo
+        
+        if (!fecha) {
+            setErrors('Por favor, selecciona una fecha de corte.');
+            return; // Detiene la ejecución de la función aquí
+        }
 
-        // Llama a la ruta de Laravel que creamos
-        axios.get(route('sociedad.datosSociedad', {tipo:tipo})) // Usamos el helper de rutas de Ziggy (incluido en Inertia)
+        // Llama a la ruta de Laravel para cargar datos de mora
+//        axios.get(route('datosEnMora', {fecha:fecha})) 
+        axios.get(route('sociedad.datosEnMora', { fecha }))
             .then(response => {
                 // Si la llamada es exitosa, response.data contiene el JSON
                 const { sociedad } = response.data;
-                
+                const { cuentas }  = response.data;
                 // Llama a la función que genera el PDF con los datos recibidos
-                ReportesPDF(sociedad);
+                ReportesMORA(sociedad, cuentas, fecha);
             })
             .catch(error => {
                 // Manejo de errores
@@ -137,7 +148,13 @@ export default function Sociedad(props) {
         }));
     }
 
+    function handleChangeFecha(e){
+        const { name, value } = e.target;
+        alert(value);
+    }
+
     return (
+
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}   
@@ -227,22 +244,15 @@ export default function Sociedad(props) {
        )}{ null }
         { verMenu && (
 
-            <div className="absolute inset-x-0 top-0 h-16 p-6">
-                      
+            <div className="absolute inset-x-0 top-10 h-4 p-6">               
                 <div className='grid grid-cols-7 gap-4'>
-                           
-                    {/* <button
-                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
-                        onClick={() => informes('LG')}
-                        > Listado de Grupos 
-                    </button> */}
-            <button
-                className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={() => generarReporte('LG')}
-                disabled={loading} // El botón se deshabilita mientras se genera
-            > 
-                {loading ? 'Generando...' : 'Listado de Grupos'}
-            </button>
+                    <button
+                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={() => {setTitle('Opciones de Reporte'); setVerOpcion(true);}}
+                        disabled={loading} // El botón se deshabilita mientras se genera
+                    > 
+                        {loading ? 'Generando...' : 'Cartera en mora'}
+                    </button>
                     <button
                         className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
                         onClick={() => informes('CC')}
@@ -271,11 +281,42 @@ export default function Sociedad(props) {
                     <Link
                         href="/mimenu"
                        className="bg-white shadow-md rounded-lg p-4 hover:bg-gray-300 transition duration-300"
-                    > Regreso
-                </Link>   
+                        > Regreso
+                    </Link>   
                 </div>
+             
             </div>
             )}{ null }
+        
+            <Modal show={verOpcion} onClose={() => setVerOpcion(false)}>
+                <form  onSubmit={info}>
+                    <h2 className="p-3 text-lg font-medium text-gray-900">
+                    Opciones de Reporte
+                    </h2>
+                    <div className="bg-white rounded-lg shadow-xl p-2 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-100">
+                        <label htmlFor={fecha} className="block text-sm font-medium text-gray-700">Fecha Corte </label>
+                        <input type="date"  id="fecha" name="fecha"  value={fecha} maxLength={20}
+                        className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100 border-gray-300`}
+                        required onChange={handleChange} 
+                    />  
+
+                    <button
+                         type="submit"
+                        className="bg-cyan-300 text-white px-4 py-1 mx-4 rounded mt-4"
+                    >
+                    Generar reporte
+                    </button>
+
+                   {/* {errors && (
+                        <div className="text-red-500 mt-2">
+                            {errors}
+                        </div>
+                    )}
+                     */}
+
+                    </div>
+                </form>
+            </Modal>
         
         </div>        
         </AuthenticatedLayout>

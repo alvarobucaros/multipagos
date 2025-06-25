@@ -14,7 +14,6 @@ export default function AuthenticatedLayoutDoc({ header, children, sociedad }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
-
 return (
      
     <div className="min-h-screen bg-gray-100">

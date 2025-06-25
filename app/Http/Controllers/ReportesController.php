@@ -22,7 +22,6 @@ class ReportesController extends Controller
     /**
      * Genera los datos necesarios para el reporte de la sociedad y sus socios.
      */
-
     public function generarDatosReporteLC  ($id){
      
         $user = Auth::user();   //  Id de la sociedad
@@ -134,7 +133,7 @@ class ReportesController extends Controller
         $grupos = Grupo::where('grp_sociedad_id', $user->sociedad_id)
         ->join('gruposocios', 'gruposocios.gsc_grupo_id', '=', 'grupos.id')
         ->join('socios', 'socios.id', '=', 'gruposocios.gsc_socio_id')
-        ->select(  'grp_titulo', 'grp_detalle', 'grp_estado', 'soc_nombre' )
+        ->select( 'grp_titulo', 'grp_detalle', 'grp_estado', 'soc_nombre' )
         ->orderBy($orden, 'asc')
         ->get();
 
@@ -151,12 +150,14 @@ class ReportesController extends Controller
        $ingresoNro = $ar[1];       // Número de ingreso gasto
        $ingresoTipo = $ar[2];      // Tipo de Ingreso Gasto
        $socioId = $ar[3];          // Id del socio
+       $anticipo = $ar[4];         // Si es anticipo o no
+     
        $user = Auth::user();       //  Id de la sociedad
 
         $ingregasto = Ingregasto::where('id',$ingresoId)
         ->first();
 
-        $conceptoId =  $ingregasto->iga_concepto_id; // Id del Concepto
+        $conceptoId =  $ingregasto->iga_concepto_id; // Id del Concepto 
 
         // trae el socio indicado
         $socios = socio::select('soc_nombre', 'soc_telefono', 'soc_email' ,'soc_tipodoc' ,'soc_nrodoc')
@@ -172,13 +173,13 @@ class ReportesController extends Controller
         // trae los abonos que tiene el socio
         $abonos = Abono::where('abo_socio_id', $socioId)
         ->where('abo_sociedad_id', $user->sociedad_id)
-        ->where('abo_ingreso_id', $ingresoId)
+        ->where('abo_ingreso_id', $ingresoNro)
         ->join('conceptos', 'conceptos.id', '=', 'abonos.abo_concepto_id')
         ->select('abo_concepto_id', 'con_descripcion', 'abo_fecha', 'abo_descripcion', 
         'abo_saldo', 'abo_abono', 'abo_ingreso_id' )
         ->orderBy('abo_concepto_id')
         ->get(); 
-
+//dd($abonos);
         //  Trae los anticipos que tenga el socio
         $anticipos = Anticipo::where('ant_socio_id', $id)
         ->where('ant_ingreso', $ingresoId )
@@ -190,6 +191,77 @@ class ReportesController extends Controller
         return response()->json(['socios' => $socios,  'sociedad' => $sociedad,
                                'ingregasto' => $ingregasto, 'abonos' => $abonos, 'anticipos' => $anticipos ]);
     }
+
+       /**
+     * Genera los datos necesarios para el reporte de la sociedad y sus socios.
+     */
+    public function generarDatosReporteCXC($id){
+     
+        $user = Auth::user();   //  Id de la sociedad
+dd($user);
+        // trae información de la sociedad 
+        $sociedad = Sociedad::select('sdd_nombre', 'sdd_email', 'sdd_telefono', 'sdd_tipodoc', 
+        'sdd_nrodoc', 'sdd_logo', 'sdd_administra')
+        ->where('id', $user->sociedad_id)
+        ->first();
+
+        // Si no se encuentra la sociedad, devuelve un error
+        if (!$sociedad) {
+            return response()->json(['error' => 'Sociedad no encontrada'], 404);
+        }
+
+        $wher = '1 = 1'; 
+        if ($id > '0'){
+            $wher = 'cxc_concepto_id = $id';
+        }
+        $gruposIds = Cuentahead::where('cxh_sociedad_id',  $id)->pluck('id');
+dd($gruposIds);
+        $cuentas = Cuenta::whereIn('cxc_head_id', $gruposIds)
+        ->join('socios', 'socios.id', '=', 'cxc_socio_id')
+        ->join('conceptos', 'conceptos.id', '=', 'cxc_concepto_id')
+        ->select('cxc_fecha', 'cxc_valor', 'cxc_saldo', 'socios.soc_nombre', 
+                 'conceptos.con_titulo')
+        ->where('cxc_saldo', '>', 0)
+        ->whereRaw($wher)
+        ->orderBy('socios.soc_nombre')
+        ->orderBy('conceptos.con_titulo')
+        ->orderBy('cxc_fecha')
+        ->get();
+
+        // Devuelve los datos en formato JSON
+        return response()->json(['sociedad' => $sociedad, 
+                                 'cuentas' => $cuentas]);
+    }
+
+       public function generarDatosReporteMORA  ($fecha){
+     
+        $user = Auth::user();   //  Id de la sociedad
+
+        // trae información de la sociedad 
+        $sociedad = Sociedad::select('sdd_nombre', 'sdd_email', 'sdd_telefono', 'sdd_tipodoc', 
+        'sdd_nrodoc', 'sdd_logo', 'sdd_administra')
+        ->where('id', $user->sociedad_id)
+        ->first();
+
+        // trae la cueentas con saldo mayor a cero
+        $cuentas = Cuentahead::where('cxh_sociedad_id', $user->sociedad_id)
+        ->join('cuentas', 'cxc_head_id', '=', 'cuentashead.id')
+        ->join('socios', 'cxc_socio_id', '=', 'socios.id')
+        ->join('conceptos', 'cxc_concepto_id', '=', 'conceptos.id')
+        ->select('socios.soc_nombre', 'conceptos.con_descripcion', 'cxh_detalle', 
+                 'cxc_fecha', 'cxc_saldo')
+        ->where('cxc_saldo', '>', 0)
+        ->orderBy('socios.soc_nombre')
+        ->orderBy('conceptos.con_descripcion')
+        ->orderBy('cxc_fecha')
+        ->get();
+    
+        // Devuelve los datos en formato JSON
+        return response()->json(['sociedad' => $sociedad, 
+                                 'cuentas' => $cuentas]);
+    }
+
+    
 
 }
 
